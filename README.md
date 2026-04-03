@@ -49,10 +49,43 @@ cp .env.example .env
 # Edit .env and fill in your credentials
 ```
 
-### Running
+### Running (local)
 
 ```bash
 python -m bot.main
+```
+
+### Deployment on a VPS (Ubuntu 24.04)
+
+To run the bot permanently on a server (auto-start on boot, auto-restart on crash):
+
+**1. Connect to your server via SSH**
+```bash
+ssh root@<your-server-ip>
+```
+
+**2. Run the setup script**
+```bash
+bash <(curl -s https://raw.githubusercontent.com/SorcG/test-portfolio/claude/first-portfolio-project-CTvTE/deploy/setup.sh)
+```
+
+**3. Create your `.env` file on the server**
+```bash
+nano /root/test-portfolio/.env
+# Add your keys, save with Ctrl+X → Y → Enter
+```
+
+**4. Start the bot**
+```bash
+systemctl start claude-bot
+systemctl status claude-bot
+```
+
+**Useful management commands:**
+```bash
+journalctl -u claude-bot -f     # Live logs
+systemctl restart claude-bot    # Restart after code updates
+systemctl stop claude-bot       # Stop the bot
 ```
 
 ### Tests
