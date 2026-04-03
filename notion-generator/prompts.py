@@ -1,6 +1,12 @@
-CONTENT_TYPES = ["Blog-Artikel", "Projektplan", "Recherche-Zusammenfassung"]
+CONTENT_TYPES = [
+    "Blog-Artikel",
+    "Projektplan",
+    "Recherche-Zusammenfassung",
+    "E-Mail-Vorlage",
+    "Social-Media-Post",
+]
 
-PROMPTS = {
+_TEMPLATES = {
     "Blog-Artikel": """You are an expert content writer. Write a well-structured blog article about the following topic.
 
 Topic: {topic}
@@ -23,7 +29,7 @@ Output the article in Markdown format with this exact structure:
 ## Conclusion
 [2-3 sentences summarizing the key points]
 
-Write in a clear, engaging style. Use bullet points where appropriate.""",
+Use bullet points where appropriate.""",
 
     "Projektplan": """You are a project management expert. Create a structured project plan for the following topic.
 
@@ -80,9 +86,57 @@ Output the summary in Markdown format with this exact structure:
 - [Recommendation 3]
 
 Be factual and concise.""",
+
+    "E-Mail-Vorlage": """You are an expert business writer. Write a professional email about the following topic.
+
+Topic: {topic}
+
+Output the email in Markdown format with this exact structure:
+# [Email Subject Line]
+
+## Salutation
+[Appropriate greeting]
+
+## Opening
+[1-2 sentences stating the purpose of the email]
+
+## Main Content
+[3-4 sentences with the core message or request]
+
+## Call to Action
+[1 sentence with a clear next step or request]
+
+## Closing
+[Professional sign-off]
+
+Keep it concise and to the point.""",
+
+    "Social-Media-Post": """You are a social media expert. Write an engaging LinkedIn post about the following topic.
+
+Topic: {topic}
+
+Output the post in Markdown format with this exact structure:
+# [Post Hook - attention-grabbing first line]
+
+## Main Content
+[3-5 sentences with the core message, insights or story]
+
+## Key Takeaways
+- [Takeaway 1]
+- [Takeaway 2]
+- [Takeaway 3]
+
+## Call to Action
+[1 engaging question or prompt for the audience]
+
+## Hashtags
+[5-7 relevant hashtags]
+
+Make it engaging and authentic.""",
 }
 
 
-def get_prompt(topic: str, content_type: str) -> str:
-    template = PROMPTS[content_type]
-    return template.format(topic=topic)
+def get_prompt(topic: str, content_type: str, tone: str, language: str) -> str:
+    template = _TEMPLATES[content_type]
+    base = template.format(topic=topic)
+    return f"{base}\n\nWrite in a {tone.lower()} tone. Respond in {language}."

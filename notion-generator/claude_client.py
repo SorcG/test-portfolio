@@ -9,9 +9,9 @@ _client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 MODEL = "claude-haiku-4-5-20251001"
 
 
-def generate_content(topic: str, content_type: str) -> str:
+def generate_content(topic: str, content_type: str, tone: str, language: str) -> str:
     """Generate structured Markdown content using Claude."""
-    prompt = get_prompt(topic, content_type)
+    prompt = get_prompt(topic, content_type, tone, language)
     response = _client.messages.create(
         model=MODEL,
         max_tokens=2048,
