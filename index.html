@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luca Sorci – KI & Automatisierung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset & Base ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #06080d;
+  --bg-card: #0c1017;
+  --bg-card-hover: #111822;
+  --accent: #00d4aa;
+  --accent-dim: rgba(0, 212, 170, 0.15);
+  --accent-glow: rgba(0, 212, 170, 0.4);
+  --text-primary: #e8edf5;
+  --text-secondary: #8892a4;
+  --text-muted: #4a5568;
+  --border: rgba(255, 255, 255, 0.06);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg-deep);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+/* ─── Navigation ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.4s, backdrop-filter 0.4s, padding 0.4s;
+}
+
+nav.scrolled {
+  background: rgba(6, 8, 13, 0.85);
+  backdrop-filter: blur(20px);
+  padding: 1rem 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* ─── Hero Section ─── */
+#hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, var(--bg-deep), transparent);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 900px;
+  padding: 0 2rem;
+}
+
+.hero-tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s 0.3s forwards;
+}
+
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s 0.5s forwards;
+}
+
+.hero-name .accent { color: var(--accent); }
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s 0.7s forwards;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.5rem;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s 0.9s forwards;
+}
+
+.hero-cta:hover {
+  background: var(--accent-dim);
+  box-shadow: 0 0 30px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+.hero-cta svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s;
+}
+
+.hero-cta:hover svg { transform: translateX(4px); }
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.2s forwards;
+}
+
+.scroll-indicator span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s infinite;
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ─── Section Common ─── */
+section {
+  padding: 8rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.15;
+}
+
+.section-divider {
+  width: 60px;
+  height: 2px;
+  background: var(--accent);
+  margin-bottom: 3rem;
+}
+
+/* ─── Reveal Animation ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── About Section ─── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.about-photo {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-photo::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, var(--accent-dim), transparent 50%);
+  z-index: 0;
+}
+
+.about-photo span {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.about-text p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.about-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.stat-item .stat-number {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-item .stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ─── Competence Section ─── */
+.competence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.competence-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s, transform 0.4s, box-shadow 0.4s;
+  cursor: default;
+}
+
+.competence-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.competence-card:hover {
+  border-color: rgba(0, 212, 170, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.competence-card:hover::before { opacity: 1; }
+
+.card-number {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1.25rem;
+  color: var(--accent);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.card-desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* ─── Contact Section ─── */
+#kontakt {
+  text-align: center;
+}
+
+.contact-email {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s;
+}
+
+.contact-email::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-email:hover { color: var(--accent); }
+.contact-email:hover::after { transform: scaleX(1); transform-origin: left; }
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.contact-links a {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.3s;
+}
+
+.contact-links a:hover { color: var(--accent); }
+
+/* ─── Footer ─── */
+footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  nav.scrolled { padding: 0.75rem 1.5rem; }
+  .nav-links { display: none; }
+
+  .nav-toggle { display: flex; }
+
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(6, 8, 13, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 2rem;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section { padding: 5rem 1.5rem; }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-photo {
+    max-width: 250px;
+    margin: 0 auto;
+  }
+
+  .about-stats {
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .competence-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Navigation ─── -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">LS_</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#ueber-mich">Über mich</a></li>
+    <li><a href="#kompetenzen">Kompetenzen</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Navigation öffnen">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── Hero ─── -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <p class="hero-tag">KI-Entwicklung · Automatisierung · Agentic Systems</p>
+    <h1 class="hero-name">Luca Sorci<span class="accent">.</span></h1>
+    <p class="hero-subtitle">Ich baue intelligente Systeme, die komplexe Probleme lösen – von der Idee bis zum deployten Produkt.</p>
+    <a href="#kontakt" class="hero-cta">
+      Kontakt aufnehmen
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 8h10M9 4l4 4-4 4"/>
+      </svg>
+    </a>
+  </div>
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── Über mich ─── -->
+<section id="ueber-mich">
+  <div class="reveal">
+    <span class="section-label">// 01 — Über mich</span>
+    <h2 class="section-title">Entwickler. Unternehmer.<br>Problemlöser.</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-photo reveal" style="transition-delay: 0.15s">
+      <span>[ FOTO ]</span>
+    </div>
+    <div class="about-text">
+      <p class="reveal" style="transition-delay: 0.2s">
+        Ich bin ein selbstständiger Entwickler und Unternehmer mit einem ausgeprägten Interesse daran,
+        komplexe Probleme durch intelligente Systeme zu lösen. Ich lerne schnell, arbeite eigenständig
+        und bringe Ideen konsequent von der Konzeption bis zur Umsetzung.
+      </p>
+      <p class="reveal" style="transition-delay: 0.3s">
+        Neben der technischen Arbeit bin ich ein leidenschaftlicher BJJ-Praktiker – eine Disziplin,
+        die mir Geduld, Problemlösungsdenken und kontinuierliche Verbesserung auch im professionellen
+        Kontext beibringt.
+      </p>
+      <div class="about-stats reveal" style="transition-delay: 0.4s">
+        <div class="stat-item">
+          <div class="stat-number">5+</div>
+          <div class="stat-label">Kompetenzfelder</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">KI</div>
+          <div class="stat-label">Schwerpunkt</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">Lernbereitschaft</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Kompetenzen ─── -->
+<section id="kompetenzen">
+  <div class="reveal">
+    <span class="section-label">// 02 — Kompetenzen</span>
+    <h2 class="section-title">Was ich mitbringe<span style="color:var(--accent)">.</span></h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="competence-grid">
+
+    <div class="competence-card reveal" style="transition-delay: 0.1s">
+      <div class="card-number">01</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 2a4 4 0 0 1 4 4c0 1.5-.8 2.8-2 3.5v1l3 2.5v2H7v-2l3-2.5v-1A4 4 0 0 1 12 2z"/>
+        <path d="M9 21h6M12 18v3"/>
+      </svg>
+      <h3 class="card-title">KI-Integration & LLM-Entwicklung</h3>
+      <p class="card-desc">Aufbau von KI-gestützten Anwendungen mit modernen Large Language Models. Prompt Engineering, API-Integration, agentenbasierte Systeme und Tool-Use-Architekturen.</p>
+    </div>
+
+    <div class="competence-card reveal" style="transition-delay: 0.2s">
+      <div class="card-number">02</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <h3 class="card-title">Automatisierung & Bot-Entwicklung</h3>
+      <p class="card-desc">Konzeption und Entwicklung von intelligenten Automatisierungslösungen – von Datenerfassung über Verarbeitung bis zur automatisierten Ausgabe via Telegram, E-Mail oder Web.</p>
+    </div>
+
+    <div class="competence-card reveal" style="transition-delay: 0.3s">
+      <div class="card-number">03</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
+      </svg>
+      <h3 class="card-title">Full-Stack Entwicklung</h3>
+      <p class="card-desc">Umsetzung von Web-Applikationen und Tools mit modernen Technologien. Von der Idee bis zum deployten Produkt auf eigenem Server.</p>
+    </div>
+
+    <div class="competence-card reveal" style="transition-delay: 0.4s">
+      <div class="card-number">04</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/>
+      </svg>
+      <h3 class="card-title">E-Commerce & Digital Business</h3>
+      <p class="card-desc">Betrieb und Weiterentwicklung eines eigenen Online-Shops. Verständnis für digitale Geschäftsmodelle, Kundenkommunikation und operative Prozesse.</p>
+    </div>
+
+    <div class="competence-card reveal" style="transition-delay: 0.5s">
+      <div class="card-number">05</div>
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/>
+        <path d="M9 6h6M6 9v6M18 9v6M9 18h6"/>
+      </svg>
+      <h3 class="card-title">MCP & Agentic Systems</h3>
+      <p class="card-desc">Entwicklung mit dem Model Context Protocol – Verbindung von KI-Modellen mit externen Tools, Datenbanken und APIs zu handlungsfähigen Agenten-Systemen.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── Kontakt ─── -->
+<section id="kontakt">
+  <div class="reveal">
+    <span class="section-label">// 03 — Kontakt</span>
+    <h2 class="section-title">Lass uns sprechen<span style="color:var(--accent)">.</span></h2>
+    <div class="section-divider" style="margin-left:auto;margin-right:auto;"></div>
+  </div>
+  <div class="reveal" style="transition-delay: 0.15s">
+    <a href="mailto:hello@lucasorci.de" class="contact-email">hello@lucasorci.de</a>
+  </div>
+  <div class="contact-links reveal" style="transition-delay: 0.3s">
+    <a href="#" target="_blank">GitHub</a>
+    <a href="#" target="_blank">LinkedIn</a>
+    <a href="#" target="_blank">Twitter / X</a>
+  </div>
+</section>
+
+<!-- ─── Footer ─── -->
+<footer>
+  <p>© 2026 Luca Sorci — Gebaut mit Präzision.</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════
+   Hero Canvas – Animated Network Mesh
+   ═══════════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height, nodes, mouse, animId;
+
+  const CONFIG = {
+    nodeCount: 80,
+    connectionDistance: 180,
+    nodeSpeed: 0.3,
+    mouseRadius: 200,
+    accentRGB: [0, 212, 170],
+  };
+
+  mouse = { x: -1000, y: -1000 };
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = canvas.offsetWidth;
+    height = canvas.offsetHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
+  }
+
+  function createNodes() {
+    nodes = [];
+    const count = width < 600 ? 40 : CONFIG.nodeCount;
+    for (let i = 0; i < count; i++) {
+      nodes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * CONFIG.nodeSpeed,
+        vy: (Math.random() - 0.5) * CONFIG.nodeSpeed,
+        radius: Math.random() * 1.5 + 0.5,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    const [r, g, b] = CONFIG.accentRGB;
+
+    // Update positions
+    for (const node of nodes) {
+      node.x += node.vx;
+      node.y += node.vy;
+      if (node.x < 0 || node.x > width) node.vx *= -1;
+      if (node.y < 0 || node.y > height) node.vy *= -1;
+
+      // Mouse repulsion
+      const dx = node.x - mouse.x;
+      const dy = node.y - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < CONFIG.mouseRadius) {
+        const force = (1 - dist / CONFIG.mouseRadius) * 0.02;
+        node.vx += dx * force;
+        node.vy += dy * force;
+      }
+
+      // Dampen velocity
+      node.vx *= 0.999;
+      node.vy *= 0.999;
+    }
+
+    // Draw connections
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONFIG.connectionDistance) {
+          const alpha = (1 - dist / CONFIG.connectionDistance) * 0.25;
+          ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes
+    for (const node of nodes) {
+      const dx = node.x - mouse.x;
+      const dy = node.y - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const glow = dist < CONFIG.mouseRadius ? (1 - dist / CONFIG.mouseRadius) * 0.6 : 0;
+      const alpha = 0.4 + glow;
+
+      ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.radius + glow * 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+
+  window.addEventListener('resize', () => {
+    resize();
+    createNodes();
+  });
+
+  resize();
+  createNodes();
+  draw();
+})();
+
+/* ═══════════════════════════════════════════
+   Scroll Reveal (Intersection Observer)
+   ═══════════════════════════════════════════ */
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
+
+/* ═══════════════════════════════════════════
+   Navigation
+   ═══════════════════════════════════════════ */
+(function() {
+  const nav = document.getElementById('navbar');
+  const toggle = document.getElementById('navToggle');
+  const links = document.getElementById('navLinks');
+
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  });
+
+  toggle.addEventListener('click', () => {
+    links.classList.toggle('open');
+  });
+
+  links.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => links.classList.remove('open'));
+  });
+})();
+</script>
+
+</body>
+</html>
