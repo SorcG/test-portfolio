@@ -505,7 +505,7 @@ section {
 .reveal-scale.visible {
   opacity: 1;
   transform: scale(1) translateY(0);
-  clip-path: circle(75% at 50% 50%);
+  clip-path: circle(100% at 50% 50%);
 }
 
 /* ─── Section Label Scramble ─── */
@@ -2563,17 +2563,37 @@ footer {
    Section Title — Word Split Animation
    ═══════════════════════════════════════════ */
 (function() {
-  document.querySelectorAll('.section-title').forEach(title => {
-    const html = title.innerHTML;
-    // Split by words while preserving HTML tags (like <span> and <br>)
-    const newHTML = html.replace(/([^\s<]+)/g, (match) => {
-      return `<span class="word"><span class="word-inner">${match}</span></span>`;
-    });
-    title.innerHTML = newHTML;
+  function wrapTextWords(node) {
+    if (node.nodeType === 3) { // Text node
+      const text = node.textContent;
+      if (!text.trim()) return;
+      const fragment = document.createDocumentFragment();
+      const words = text.split(/(\s+)/);
+      words.forEach(word => {
+        if (/^\s+$/.test(word)) {
+          fragment.appendChild(document.createTextNode(word));
+        } else if (word.length > 0) {
+          const outer = document.createElement('span');
+          outer.className = 'word';
+          const inner = document.createElement('span');
+          inner.className = 'word-inner';
+          inner.textContent = word;
+          outer.appendChild(inner);
+          fragment.appendChild(outer);
+        }
+      });
+      node.parentNode.replaceChild(fragment, node);
+    } else if (node.nodeType === 1 && node.tagName !== 'BR') {
+      // Element node — recurse into children (skip <br>)
+      Array.from(node.childNodes).forEach(child => wrapTextWords(child));
+    }
+  }
 
-    // Add stagger delays to word-inner elements
+  document.querySelectorAll('.section-title').forEach(title => {
+    wrapTextWords(title);
+    // Add stagger delays
     title.querySelectorAll('.word-inner').forEach((w, i) => {
-      w.style.transitionDelay = `${i * 0.08}s`;
+      w.style.transitionDelay = `${i * 0.1}s`;
     });
   });
 })();
@@ -2731,17 +2751,13 @@ footer {
   window.addEventListener('scroll', () => {
     if (!ticking) {
       requestAnimationFrame(() => {
-        // Titles: parallax + scale + opacity
+        // Titles: parallax shift only (word-split handles reveal)
         titles.forEach(title => {
           const rect = title.getBoundingClientRect();
           const center = rect.top + rect.height / 2;
           const viewCenter = vh / 2;
           const offset = (center - viewCenter) * 0.06;
-          const p = getProgress(title);
-          const scale = 0.92 + p * 0.08;
-          const opacity = 0.4 + p * 0.6;
-          title.style.transform = `translateY(${offset}px) scale(${scale})`;
-          title.style.opacity = opacity;
+          title.style.transform = `translateY(${offset}px)`;
         });
 
         // Dividers: scaleX linked to scroll progress
