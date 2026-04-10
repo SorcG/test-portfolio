@@ -573,6 +573,115 @@ section {
   position: relative;
 }
 
+/* ─── Ambient Gradient Orbs ─── */
+.ambient-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform;
+  mix-blend-mode: screen;
+}
+
+.ambient-orb--1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.08) 0%, transparent 70%);
+  top: 10%;
+  left: -5%;
+  animation: orbDrift1 25s ease-in-out infinite;
+}
+
+.ambient-orb--2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0, 150, 255, 0.06) 0%, transparent 70%);
+  top: 40%;
+  right: -8%;
+  animation: orbDrift2 30s ease-in-out infinite;
+}
+
+.ambient-orb--3 {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.05) 0%, transparent 70%);
+  bottom: 5%;
+  left: 20%;
+  animation: orbDrift3 22s ease-in-out infinite;
+}
+
+.ambient-orb--4 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(120, 80, 255, 0.05) 0%, transparent 70%);
+  top: 65%;
+  left: 50%;
+  animation: orbDrift4 28s ease-in-out infinite;
+}
+
+@keyframes orbDrift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(80px, 60px) scale(1.1); }
+  50% { transform: translate(30px, 120px) scale(0.95); }
+  75% { transform: translate(-40px, 50px) scale(1.05); }
+}
+
+@keyframes orbDrift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-60px, -80px) scale(1.08); }
+  50% { transform: translate(-120px, -20px) scale(0.9); }
+  75% { transform: translate(-30px, -100px) scale(1.12); }
+}
+
+@keyframes orbDrift3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(100px, -50px) scale(1.15); }
+  66% { transform: translate(-60px, -80px) scale(0.92); }
+}
+
+@keyframes orbDrift4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  20% { transform: translate(-70px, 40px) scale(1.1); }
+  50% { transform: translate(50px, -60px) scale(0.88); }
+  80% { transform: translate(-30px, -40px) scale(1.06); }
+}
+
+/* ─── Noise Grain Overlay ─── */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  animation: grainShift 0.5s steps(1) infinite;
+}
+
+@keyframes grainShift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-5%, -10%); }
+  40% { transform: translate(8%, 5%); }
+  60% { transform: translate(-3%, 8%); }
+  80% { transform: translate(5%, -5%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ─── Parallax Depth Layers ─── */
+[data-parallax] {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
 /* ─── Parallax Titles ─── */
 .section-title {
   will-change: transform;
@@ -1586,10 +1695,37 @@ footer {
   .tg-msg {
     font-size: 0.75rem;
   }
+
+  .ambient-orb { filter: blur(80px); }
+  .ambient-orb--1 { width: 350px; height: 350px; }
+  .ambient-orb--2 { width: 300px; height: 300px; }
+  .ambient-orb--3 { width: 250px; height: 250px; }
+  .ambient-orb--4 { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-orb,
+  .noise-overlay,
+  .float-shape,
+  [data-parallax] {
+    animation: none !important;
+    transform: none !important;
+  }
 }
 </style>
 </head>
 <body>
+
+<!-- ─── Ambient Background Orbs ─── -->
+<div class="ambient-orbs" aria-hidden="true">
+  <div class="ambient-orb ambient-orb--1"></div>
+  <div class="ambient-orb ambient-orb--2"></div>
+  <div class="ambient-orb ambient-orb--3"></div>
+  <div class="ambient-orb ambient-orb--4"></div>
+</div>
+
+<!-- ─── Noise Grain Overlay ─── -->
+<div class="noise-overlay" aria-hidden="true"></div>
 
 <!-- ─── Page Loader ─── -->
 <div class="page-loader" id="pageLoader">
@@ -1648,8 +1784,8 @@ footer {
     <div class="section-divider"></div>
   </div>
   <div class="section-float-container">
-    <div class="float-shape float-shape--circle"></div>
-    <div class="float-shape float-shape--diamond"></div>
+    <div class="float-shape float-shape--circle" data-parallax="0.12"></div>
+    <div class="float-shape float-shape--diamond" data-parallax="-0.08"></div>
   </div>
   <div class="about-grid">
     <div class="about-photo reveal-left" style="transition-delay: 0.15s">
@@ -1687,9 +1823,9 @@ footer {
     <div class="section-divider"></div>
   </div>
   <div class="section-float-container">
-    <div class="float-shape float-shape--ring"></div>
-    <div class="float-shape float-shape--cross"></div>
-    <div class="float-shape float-shape--hex"></div>
+    <div class="float-shape float-shape--ring" data-parallax="0.15"></div>
+    <div class="float-shape float-shape--cross" data-parallax="-0.1"></div>
+    <div class="float-shape float-shape--hex" data-parallax="0.08"></div>
   </div>
   <div class="competence-grid">
 
@@ -1759,8 +1895,8 @@ footer {
 <!-- ─── Projekte ─── -->
 <section id="projekte">
   <div class="section-float-container">
-    <div class="float-shape float-shape--circle" style="top:10%;right:3%"></div>
-    <div class="float-shape float-shape--cross" style="top:70%;left:8%"></div>
+    <div class="float-shape float-shape--circle" style="top:10%;right:3%" data-parallax="0.1"></div>
+    <div class="float-shape float-shape--cross" style="top:70%;left:8%" data-parallax="-0.12"></div>
   </div>
   <div class="reveal">
     <span class="section-label">// 03 — Projekte</span>
@@ -1968,9 +2104,9 @@ footer {
 <!-- ─── Tech Stack ─── -->
 <section id="techstack">
   <div class="section-float-container">
-    <div class="float-shape float-shape--hex" style="top:20%;right:8%"></div>
-    <div class="float-shape float-shape--circle" style="bottom:15%;left:5%"></div>
-    <div class="float-shape float-shape--cross" style="top:50%;right:12%"></div>
+    <div class="float-shape float-shape--hex" style="top:20%;right:8%" data-parallax="0.14"></div>
+    <div class="float-shape float-shape--circle" style="bottom:15%;left:5%" data-parallax="-0.09"></div>
+    <div class="float-shape float-shape--cross" style="top:50%;right:12%" data-parallax="0.11"></div>
   </div>
   <div class="reveal">
     <span class="section-label">// 04 — Tech Stack</span>
@@ -2122,8 +2258,8 @@ footer {
     <div class="section-divider" style="margin-left:auto;margin-right:auto;"></div>
   </div>
   <div class="section-float-container">
-    <div class="float-shape float-shape--diamond" style="top:30%;left:auto;right:10%"></div>
-    <div class="float-shape float-shape--circle" style="bottom:20%;left:8%"></div>
+    <div class="float-shape float-shape--diamond" style="top:30%;left:auto;right:10%" data-parallax="-0.1"></div>
+    <div class="float-shape float-shape--circle" style="bottom:20%;left:8%" data-parallax="0.13"></div>
   </div>
   <div class="reveal-scale" style="transition-delay: 0.15s">
     <a href="mailto:luca@sorci.com" class="contact-email">luca@sorci.com</a>
@@ -2634,6 +2770,62 @@ footer {
   hoverTargets.forEach(el => {
     el.addEventListener('mouseenter', () => dot.classList.add('hover'));
     el.addEventListener('mouseleave', () => dot.classList.remove('hover'));
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   Parallax Depth Layers
+   ═══════════════════════════════════════════ */
+(function() {
+  const parallaxEls = document.querySelectorAll('[data-parallax]');
+  if (!parallaxEls.length) return;
+
+  // Skip heavy parallax on mobile
+  if (window.innerWidth < 768) return;
+
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        parallaxEls.forEach(el => {
+          const speed = parseFloat(el.dataset.parallax);
+          const rect = el.closest('section')?.getBoundingClientRect();
+          if (rect && rect.bottom > -200 && rect.top < window.innerHeight + 200) {
+            el.style.transform = `translateY(${scrollY * speed}px)`;
+          }
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   Ambient Orb Scroll Response
+   ═══════════════════════════════════════════ */
+(function() {
+  const orbs = document.querySelectorAll('.ambient-orb');
+  if (!orbs.length) return;
+
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const speeds = [0.03, -0.02, 0.015, -0.025];
+        orbs.forEach((orb, i) => {
+          const speed = speeds[i] || 0.02;
+          orb.style.transform += ''; // keep CSS animation
+          orb.style.marginTop = `${scrollY * speed}px`;
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
   });
 })();
 </script>
