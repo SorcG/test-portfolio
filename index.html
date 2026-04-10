@@ -290,18 +290,18 @@ nav.scrolled {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
 #hero-canvas {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, black 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, black 40%, transparent 100%);
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 120% 110% at 50% 50%, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 120% 110% at 50% 50%, black 60%, transparent 100%);
 }
 
 .hero-gradient {
@@ -2470,16 +2470,19 @@ footer {
     animId = requestAnimationFrame(draw);
   }
 
-  canvas.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
+  // Mouse tracking via window (canvas has pointer-events:none)
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
   });
 
-  canvas.addEventListener('mouseleave', () => {
-    mouse.x = -1000;
-    mouse.y = -1000;
-  });
+  // Fade out canvas as user scrolls past hero
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    const opacity = Math.max(0, 1 - scrollY / (vh * 0.8));
+    canvas.style.opacity = opacity;
+  }, { passive: true });
 
   window.addEventListener('resize', () => {
     resize();
