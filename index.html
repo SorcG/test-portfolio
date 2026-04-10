@@ -1444,17 +1444,32 @@ footer {
   const typing = document.getElementById('tgTyping');
   let animated = false;
 
-  function scrollChat() {
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  // Only scroll down if the latest message is below the visible area
+  function scrollChatIfNeeded() {
+    const containerRect = messagesContainer.getBoundingClientRect();
+    const visibleMessages = messagesContainer.querySelectorAll('.tg-msg.show');
+    const lastVisible = visibleMessages[visibleMessages.length - 1];
+    if (!lastVisible) return;
+    const msgRect = lastVisible.getBoundingClientRect();
+    // If message bottom exceeds container bottom, smooth scroll
+    if (msgRect.bottom > containerRect.bottom - 10) {
+      messagesContainer.scrollTo({
+        top: messagesContainer.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }
 
   function animateChat() {
     if (animated) return;
     animated = true;
 
+    // Start at top
+    messagesContainer.scrollTop = 0;
+
     let totalDelay = 0;
 
-    messages.forEach((msg, i) => {
+    messages.forEach((msg) => {
       const msgDelay = parseInt(msg.dataset.delay) || 800;
       const isBot = msg.classList.contains('tg-msg--bot');
 
@@ -1462,7 +1477,7 @@ footer {
         // Show typing indicator before bot message
         setTimeout(() => {
           typing.classList.add('show');
-          scrollChat();
+          scrollChatIfNeeded();
         }, totalDelay);
 
         totalDelay += msgDelay;
@@ -1471,7 +1486,7 @@ footer {
         setTimeout(() => {
           typing.classList.remove('show');
           msg.classList.add('show');
-          scrollChat();
+          scrollChatIfNeeded();
         }, totalDelay);
       } else {
         totalDelay += msgDelay;
@@ -1479,7 +1494,7 @@ footer {
         // Show user message
         setTimeout(() => {
           msg.classList.add('show');
-          scrollChat();
+          scrollChatIfNeeded();
         }, totalDelay);
       }
 
