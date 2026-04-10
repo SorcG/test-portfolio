@@ -26,6 +26,7 @@
 <style>
 /* ─── Reset & Base ─── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 :root {
   --bg-deep: #06080d;
@@ -38,6 +39,8 @@
   --text-secondary: #8892a4;
   --text-muted: #4a5568;
   --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(0, 212, 170, 0.2);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --font-display: 'Syne', sans-serif;
   --font-body: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -165,7 +168,7 @@ body {
   height: 100%;
   width: 0%;
   background: var(--accent);
-  animation: loaderProgress 1.2s 0.5s forwards cubic-bezier(0.16, 1, 0.3, 1);
+  animation: loaderProgress 0.5s 0.2s forwards var(--ease);
 }
 
 @keyframes loaderReveal {
@@ -310,7 +313,7 @@ nav.scrolled {
 
 .hero-name {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: clamp(2.5rem, 8vw, 6rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -439,8 +442,8 @@ section {
 /* ─── Reveal Animations ─── */
 .reveal, .reveal-left, .reveal-right, .reveal-scale {
   opacity: 0;
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.9s var(--ease),
+              transform 0.9s var(--ease);
 }
 
 .reveal { transform: translateY(50px); }
@@ -587,7 +590,7 @@ section {
 
 /* ─── Card Icon Spin on Reveal ─── */
 .competence-card.visible .card-icon {
-  animation: iconSpin 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: iconSpin 0.8s var(--ease) forwards;
 }
 
 @keyframes iconSpin {
@@ -603,12 +606,16 @@ section {
 .section-divider {
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+  transition: transform 1s var(--ease) 0.3s;
 }
 
 .reveal.visible .section-divider,
 .reveal-scale.visible .section-divider {
   transform: scaleX(1);
+}
+
+#kontakt .section-divider {
+  transform-origin: center;
 }
 
 /* ─── About Section ─── */
@@ -706,7 +713,7 @@ section {
 }
 
 .competence-card:hover {
-  border-color: rgba(0, 212, 170, 0.2);
+  border-color: var(--border-hover);
   transform: translateY(-4px);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
@@ -861,7 +868,7 @@ section {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  max-height: 520px;
+  max-height: min(520px, 60vh);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.1) transparent;
@@ -982,13 +989,13 @@ section {
   height: 2px;
   background: var(--accent);
   transform: scaleX(0);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s var(--ease);
 }
 
 .stack-item:hover {
-  border-color: rgba(0, 212, 170, 0.2);
+  border-color: var(--border-hover);
   transform: translateY(-4px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
 .stack-item:hover::before {
@@ -1411,7 +1418,7 @@ section {
 
 .contact-email {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  font-size: clamp(1.25rem, 3.5vw, 2.5rem);
   font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
@@ -1430,7 +1437,7 @@ section {
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.4s var(--ease);
 }
 
 .contact-email:hover { color: var(--accent); }
@@ -1546,6 +1553,38 @@ footer {
   .browser-mock,
   .editor-mock {
     max-width: 100%;
+  }
+
+  .competence-card {
+    padding: 1.5rem;
+  }
+
+  .terminal-body,
+  .browser-body,
+  .editor-body {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  section { padding: 3.5rem 1rem; }
+
+  .stack-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .project-tags {
+    gap: 0.3rem;
+  }
+
+  .project-tag {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.6rem;
+  }
+
+  .tg-msg {
+    font-size: 0.75rem;
   }
 }
 </style>
@@ -1743,7 +1782,7 @@ footer {
       </ul>
     </div>
     <div class="reveal-right" style="transition-delay:0.2s">
-      <div class="tg-chat" id="tgChat">
+      <div class="tg-chat" id="tgChat" role="img" aria-label="Telegram Chat Demo: KI-Assistent beantwortet Reisefragen zu Lissabon">
         <div class="tg-header">
           <div class="tg-avatar">AI</div>
           <div class="tg-header-info">
@@ -1819,7 +1858,7 @@ footer {
   <!-- Second Project: Research Agent -->
   <div class="project-showcase project-showcase--reversed">
     <div class="reveal-left" style="transition-delay:0.2s">
-      <div class="terminal" id="termAgent">
+      <div class="terminal" id="termAgent" role="img" aria-label="Terminal Demo: KI-Agent führt autonome Recherche mit Tool-Aufrufen durch">
         <div class="terminal-bar">
           <span class="terminal-dot terminal-dot--red"></span>
           <span class="terminal-dot terminal-dot--yellow"></span>
@@ -1889,7 +1928,7 @@ footer {
       </ul>
     </div>
     <div class="reveal-right" style="transition-delay:0.2s">
-      <div class="browser-mock" id="browserNotion">
+      <div class="browser-mock" id="browserNotion" role="img" aria-label="Browser Demo: Streamlit-App generiert KI-Content und speichert in Notion">
         <div class="browser-bar">
           <div class="browser-dots"><span></span><span></span><span></span></div>
           <div class="browser-url">localhost:8501</div>
@@ -1946,7 +1985,7 @@ footer {
   <!-- Fourth Project: Portfolio Website -->
   <div class="project-showcase project-showcase--reversed" style="margin-top:6rem;padding-top:6rem;border-top:1px solid var(--border);">
     <div class="reveal-left" style="transition-delay:0.2s">
-      <div class="editor-mock" id="editorMock">
+      <div class="editor-mock" id="editorMock" role="img" aria-label="Code Editor Demo: JavaScript-Code der Portfolio-Website mit Canvas-Animation">
         <div class="editor-bar">
           <div class="browser-dots"><span></span><span></span><span></span></div>
           <div class="editor-tab">index.html</div>
@@ -2000,6 +2039,8 @@ footer {
 <section id="techstack">
   <div class="section-float-container">
     <div class="float-shape float-shape--hex" style="top:20%;right:8%"></div>
+    <div class="float-shape float-shape--circle" style="bottom:15%;left:5%"></div>
+    <div class="float-shape float-shape--cross" style="top:50%;right:12%"></div>
   </div>
   <div class="reveal">
     <span class="section-label">// 04 — Tech Stack</span>
@@ -2152,6 +2193,7 @@ footer {
   </div>
   <div class="section-float-container">
     <div class="float-shape float-shape--diamond" style="top:30%;left:auto;right:10%"></div>
+    <div class="float-shape float-shape--circle" style="bottom:20%;left:8%"></div>
   </div>
   <div class="reveal-scale" style="transition-delay: 0.15s">
     <a href="mailto:luca@sorci.com" class="contact-email">luca@sorci.com</a>
@@ -2301,7 +2343,7 @@ footer {
         entry.target.classList.add('visible');
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
 
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
 })();
@@ -2674,7 +2716,7 @@ footer {
   window.addEventListener('load', () => {
     setTimeout(() => {
       loader.classList.add('hidden');
-    }, 1800);
+    }, 800);
   });
 })();
 
