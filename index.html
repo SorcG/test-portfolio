@@ -2635,30 +2635,35 @@ footer {
 
 
 /* ═══════════════════════════════════════════
-   Scroll Reveal (Intersection Observer — one-shot)
+   Scroll Reveal (Intersection Observer — bi-directional)
    ═══════════════════════════════════════════ */
 (function() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        observer.unobserve(entry.target); // fire once, stay visible
+      } else {
+        entry.target.classList.remove('visible');
       }
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
 
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
 
-  // Competence cards: stagger 3D flip — fire once
+  // Competence cards: stagger 3D flip — bi-directional
   const cardObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
+      const cards = entry.target.querySelectorAll('.competence-card');
       if (entry.isIntersecting) {
-        const cards = entry.target.querySelectorAll('.competence-card');
         cards.forEach((card, i) => {
           card.style.transitionDelay = `${i * 0.12}s`;
           requestAnimationFrame(() => card.classList.add('visible'));
         });
-        cardObserver.unobserve(entry.target);
+      } else {
+        cards.forEach((card, i) => {
+          card.style.transitionDelay = `${i * 0.06}s`;
+          card.classList.remove('visible');
+        });
       }
     });
   }, { threshold: 0.1 });
@@ -2668,18 +2673,22 @@ footer {
 })();
 
 /* ═══════════════════════════════════════════
-   Stack Item Cascade Stagger — fire once
+   Stack Item Cascade Stagger — bi-directional
    ═══════════════════════════════════════════ */
 (function() {
   const stackObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
+      const items = entry.target.querySelectorAll('.stack-item');
       if (entry.isIntersecting) {
-        const items = entry.target.querySelectorAll('.stack-item');
         items.forEach((item, i) => {
           item.style.transitionDelay = `${i * 80}ms`;
           requestAnimationFrame(() => item.classList.add('visible'));
         });
-        stackObserver.unobserve(entry.target);
+      } else {
+        items.forEach((item, i) => {
+          item.style.transitionDelay = `${i * 40}ms`;
+          item.classList.remove('visible');
+        });
       }
     });
   }, { threshold: 0.1 });
