@@ -817,6 +817,136 @@ section {
   30% { opacity: 1; transform: scale(1); }
 }
 
+/* ─── Reversed Project Layout ─── */
+.project-showcase--reversed {
+  margin-top: 6rem;
+  padding-top: 6rem;
+  border-top: 1px solid var(--border);
+}
+
+.project-showcase--reversed > *:first-child {
+  order: 1;
+}
+
+.project-showcase--reversed > *:last-child {
+  order: 2;
+}
+
+/* ─── Terminal Mockup ─── */
+.terminal {
+  background: #0a0e14;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  max-width: 520px;
+}
+
+.terminal-bar {
+  background: #151b24;
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-dot--red { background: #ff5f57; }
+.terminal-dot--yellow { background: #febc2e; }
+.terminal-dot--green { background: #28c840; }
+
+.terminal-bar-title {
+  flex: 1;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-right: 42px;
+}
+
+.terminal-body {
+  padding: 1.2rem;
+  line-height: 1.8;
+  min-height: 340px;
+}
+
+.term-line {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s, transform 0.3s;
+  white-space: pre-wrap;
+  margin-bottom: 0.15rem;
+}
+
+.term-line.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.term-line--prompt {
+  color: var(--accent);
+}
+
+.term-line--prompt .term-cmd {
+  color: var(--text-primary);
+}
+
+.term-line--agent {
+  color: #64b5f6;
+}
+
+.term-line--tool {
+  color: #4dd0e1;
+  padding-left: 0.5rem;
+}
+
+.term-line--result {
+  color: var(--text-muted);
+  padding-left: 1rem;
+  font-size: 0.72rem;
+}
+
+.term-line--blank {
+  height: 1rem;
+}
+
+.term-line--success {
+  color: #66bb6a;
+  font-weight: 500;
+}
+
+.term-line--success.show {
+  text-shadow: 0 0 12px rgba(102, 187, 106, 0.4);
+}
+
+.term-line--info {
+  color: var(--text-muted);
+  padding-left: 1.2rem;
+  font-size: 0.72rem;
+}
+
+.term-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: cursorBlink 1s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* ─── Contact Section ─── */
 #kontakt {
   text-align: center;
@@ -937,6 +1067,18 @@ footer {
 
   .tg-messages {
     max-height: 400px;
+  }
+
+  .project-showcase--reversed > *:first-child {
+    order: 0;
+  }
+
+  .project-showcase--reversed > *:last-child {
+    order: 0;
+  }
+
+  .terminal {
+    max-width: 100%;
   }
 }
 </style>
@@ -1190,6 +1332,56 @@ footer {
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Second Project: Research Agent -->
+  <div class="project-showcase project-showcase--reversed">
+    <div class="reveal-left" style="transition-delay:0.2s">
+      <div class="terminal" id="termAgent">
+        <div class="terminal-bar">
+          <span class="terminal-dot terminal-dot--red"></span>
+          <span class="terminal-dot terminal-dot--yellow"></span>
+          <span class="terminal-dot terminal-dot--green"></span>
+          <span class="terminal-bar-title">research-agent — zsh</span>
+        </div>
+        <div class="terminal-body" id="termBody">
+          <div class="term-line term-line--prompt" data-delay="300" data-type="true">$ research-agent --task "KI-Trends 2026 analysieren"</div>
+          <div class="term-line term-line--blank" data-delay="600"></div>
+          <div class="term-line term-line--agent" data-delay="400">[Agent] Aufgabe erhalten. Starte Recherche...</div>
+          <div class="term-line term-line--tool" data-delay="800">[Agent] → Tool: web_search("KI Trends 2026")</div>
+          <div class="term-line term-line--result" data-delay="1000">  ← 5 relevante Quellen gefunden</div>
+          <div class="term-line term-line--tool" data-delay="800">[Agent] → Tool: read_url("arxiv.org/...", "techcrunch.com/...")</div>
+          <div class="term-line term-line--result" data-delay="1200">  ← 3 Artikel extrahiert (12.4 KB)</div>
+          <div class="term-line term-line--tool" data-delay="800">[Agent] → Tool: analyze(content, focus="trends")</div>
+          <div class="term-line term-line--result" data-delay="1000">  ← 6 Haupttrends identifiziert</div>
+          <div class="term-line term-line--tool" data-delay="600">[Agent] → Tool: write_file("ki-trends-2026.md")</div>
+          <div class="term-line term-line--result" data-delay="600">  ← Report gespeichert (2.1 KB)</div>
+          <div class="term-line term-line--blank" data-delay="400"></div>
+          <div class="term-line term-line--success" data-delay="300">✅ Aufgabe abgeschlossen in 4 Schritten.</div>
+          <div class="term-line term-line--info" data-delay="200">   Report: ki-trends-2026.md</div>
+        </div>
+      </div>
+    </div>
+    <div class="project-info">
+      <h3 class="project-title reveal-right" style="transition-delay:0.1s">Smart Research Agent</h3>
+      <p class="project-desc reveal-right" style="transition-delay:0.2s">
+        Ein autonomer KI-Agent, der auf Basis des Model Context Protocol (MCP) arbeitet. Er nimmt Recherche-Aufgaben entgegen, plant selbstständig die Vorgehensweise und nutzt externe Tools – von Websuche über Artikelanalyse bis zur strukturierten Report-Erstellung.
+      </p>
+      <div class="project-tags reveal-right" style="transition-delay:0.3s">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">MCP</span>
+        <span class="project-tag">Claude API</span>
+        <span class="project-tag">Tool-Use</span>
+        <span class="project-tag">Agentic Architecture</span>
+      </div>
+      <ul class="project-features reveal-right" style="transition-delay:0.4s">
+        <li>Autonome Tool-Aufrufe via MCP-Server</li>
+        <li>Multi-Step Reasoning mit Kontextverständnis</li>
+        <li>Strukturierte Ausgabe als Markdown-Report</li>
+        <li>Erweiterbar durch zusätzliche MCP-Tools</li>
+        <li>Modulare Pipeline: Suche → Analyse → Synthese</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -1511,6 +1703,78 @@ footer {
   }, { threshold: 0.2 });
 
   observer.observe(chat);
+})();
+
+/* ═══════════════════════════════════════════
+   Terminal Agent Animation
+   ═══════════════════════════════════════════ */
+(function() {
+  const terminal = document.getElementById('termAgent');
+  if (!terminal) return;
+
+  const body = document.getElementById('termBody');
+  const lines = body.querySelectorAll('.term-line');
+  let animated = false;
+
+  function typeText(element, text, speed, callback) {
+    element.textContent = '';
+    let i = 0;
+    const cursor = document.createElement('span');
+    cursor.className = 'term-cursor';
+    element.appendChild(cursor);
+
+    function type() {
+      if (i < text.length) {
+        cursor.before(text.charAt(i));
+        i++;
+        setTimeout(type, speed);
+      } else {
+        cursor.remove();
+        if (callback) callback();
+      }
+    }
+    type();
+  }
+
+  function animateTerminal() {
+    if (animated) return;
+    animated = true;
+
+    let totalDelay = 0;
+
+    lines.forEach((line, idx) => {
+      const delay = parseInt(line.dataset.delay) || 400;
+      const shouldType = line.dataset.type === 'true';
+
+      totalDelay += delay;
+
+      setTimeout(() => {
+        if (shouldType) {
+          const fullText = line.textContent;
+          line.textContent = '';
+          line.classList.add('show');
+          typeText(line, fullText, 28, () => {});
+        } else {
+          line.classList.add('show');
+        }
+      }, totalDelay);
+
+      // Extra pause after results for realism
+      if (line.classList.contains('term-line--result')) {
+        totalDelay += 200;
+      }
+    });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateTerminal();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(terminal);
 })();
 
 /* ═══════════════════════════════════════════
