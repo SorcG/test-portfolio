@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Luca Sorci – KI & Automatisierung</title>
+<meta name="description" content="Portfolio von Luca Sorci – KI-Entwickler, Automatisierungsexperte & digitaler Unternehmer. Spezialisiert auf LLM-Integration, Agentic Systems und Full-Stack Entwicklung.">
+<meta name="author" content="Luca Sorci">
+
+<!-- Open Graph / LinkedIn -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Luca Sorci – KI & Automatisierung">
+<meta property="og:description" content="KI-Entwickler, Automatisierungsexperte & digitaler Unternehmer. Spezialisiert auf LLM-Integration, Agentic Systems und Full-Stack Entwicklung.">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Luca Sorci – KI & Automatisierung">
+<meta name="twitter:description" content="KI-Entwickler, Automatisierungsexperte & digitaler Unternehmer. Spezialisiert auf LLM-Integration, Agentic Systems und Full-Stack Entwicklung.">
+
+<!-- Favicon (inline SVG) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%2306080d'/><text x='50' y='68' font-family='monospace' font-size='48' font-weight='700' fill='%2300d4aa' text-anchor='middle'>LS</text></svg>">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -1027,6 +1043,249 @@ section {
   50% { opacity: 0; }
 }
 
+/* ─── Browser Mockup ─── */
+.browser-mock {
+  background: #0e1621;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  max-width: 480px;
+}
+
+.browser-bar {
+  background: #151b24;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.browser-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.browser-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.browser-dots span:nth-child(1) { background: #ff5f57; }
+.browser-dots span:nth-child(2) { background: #febc2e; }
+.browser-dots span:nth-child(3) { background: #28c840; }
+
+.browser-url {
+  flex: 1;
+  background: #0a0e14;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.browser-body {
+  padding: 1.2rem;
+  min-height: 320px;
+}
+
+.app-mock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.app-mock-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.app-mock-caption {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.app-mock-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.app-mock-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.app-mock-label {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.app-mock-input {
+  background: #0a0e14;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.45rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  min-height: 1.8rem;
+}
+
+.app-mock-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.app-mock-row .app-mock-field {
+  flex: 1;
+}
+
+.app-mock-select {
+  background: #0a0e14;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+.app-mock-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: default;
+  transition: box-shadow 0.4s, background 0.4s;
+}
+
+.app-mock-btn--primary {
+  background: var(--accent);
+  color: #06080d;
+}
+
+.app-mock-btn--primary.glow {
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.app-mock-preview {
+  background: #0a0e14;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.6rem;
+  min-height: 80px;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.app-mock-preview h4 {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.app-mock-preview ul {
+  margin: 0.2rem 0;
+  padding-left: 1rem;
+}
+
+.app-line {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+.app-line.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Code Editor Mockup ─── */
+.editor-mock {
+  background: #0d1117;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  max-width: 520px;
+  font-family: var(--font-mono);
+}
+
+.editor-bar {
+  background: #161b22;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.editor-tab {
+  background: #0d1117;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px 4px 0 0;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--accent);
+}
+
+.editor-body {
+  padding: 1rem 0;
+  min-height: 320px;
+  counter-reset: line;
+}
+
+.code-line {
+  display: flex;
+  padding: 0.08rem 1rem;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.code-line.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.code-ln {
+  width: 2.5rem;
+  text-align: right;
+  padding-right: 1rem;
+  color: rgba(255, 255, 255, 0.15);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.code-content {
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+/* Syntax highlighting */
+.syn-tag { color: #7ee787; }
+.syn-attr { color: #79c0ff; }
+.syn-str { color: #a5d6ff; }
+.syn-comment { color: #484f58; font-style: italic; }
+.syn-kw { color: #ff7b72; }
+.syn-fn { color: #d2a8ff; }
+.syn-num { color: #79c0ff; }
+.syn-prop { color: #79c0ff; }
+.syn-val { color: #a5d6ff; }
+.syn-punct { color: #8b949e; }
+
 /* ─── Contact Section ─── */
 #kontakt {
   text-align: center;
@@ -1164,6 +1423,11 @@ footer {
   .stack-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 0.75rem;
+  }
+
+  .browser-mock,
+  .editor-mock {
+    max-width: 100%;
   }
 }
 </style>
@@ -1467,6 +1731,135 @@ footer {
         <li>Strukturierte Ausgabe als Markdown-Report</li>
         <li>Erweiterbar durch zusätzliche MCP-Tools</li>
         <li>Modulare Pipeline: Suche → Analyse → Synthese</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Third Project: Notion Generator -->
+  <div class="project-showcase" style="margin-top:6rem;padding-top:6rem;border-top:1px solid var(--border);">
+    <div class="project-info">
+      <h3 class="project-title reveal-left" style="transition-delay:0.1s">Claude → Notion Generator</h3>
+      <p class="project-desc reveal-left" style="transition-delay:0.2s">
+        Eine Streamlit-Webanwendung, die mit Claude AI strukturierte Inhalte generiert und per One-Click als formatierte Seite direkt in Notion speichert. Von Blog-Artikeln über Projektpläne bis hin zu Social-Media-Posts.
+      </p>
+      <div class="project-tags reveal-left" style="transition-delay:0.3s">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">Streamlit</span>
+        <span class="project-tag">Claude API</span>
+        <span class="project-tag">Notion API</span>
+        <span class="project-tag">Markdown</span>
+      </div>
+      <ul class="project-features reveal-left" style="transition-delay:0.4s">
+        <li>5 Content-Typen: Blog, Projektplan, Recherche, E-Mail, Social Media</li>
+        <li>Live-Preview mit editierbarem Markdown</li>
+        <li>One-Click Export als formatierte Notion-Seite</li>
+        <li>Konfigurierbarer Ton und Sprache (DE/EN)</li>
+        <li>Markdown → Notion Block Konvertierung</li>
+      </ul>
+    </div>
+    <div class="reveal-right" style="transition-delay:0.2s">
+      <div class="browser-mock" id="browserNotion">
+        <div class="browser-bar">
+          <div class="browser-dots"><span></span><span></span><span></span></div>
+          <div class="browser-url">localhost:8501</div>
+        </div>
+        <div class="browser-body">
+          <div class="app-mock">
+            <div class="app-line" data-delay="300">
+              <div class="app-mock-title">Claude → Notion Generator</div>
+              <div class="app-mock-caption">Generate structured content with Claude AI and save it directly to Notion.</div>
+            </div>
+            <div class="app-line" data-delay="400"><div class="app-mock-divider"></div></div>
+            <div class="app-line" data-delay="500">
+              <div class="app-mock-field">
+                <div class="app-mock-label">Topic</div>
+                <div class="app-mock-input" id="notionTopicInput"></div>
+              </div>
+            </div>
+            <div class="app-line" data-delay="400">
+              <div class="app-mock-field">
+                <div class="app-mock-label">Content type</div>
+                <div class="app-mock-select">Blog-Artikel</div>
+              </div>
+            </div>
+            <div class="app-line" data-delay="300">
+              <div class="app-mock-row">
+                <div class="app-mock-field">
+                  <div class="app-mock-label">Tone</div>
+                  <div class="app-mock-select">Professional</div>
+                </div>
+                <div class="app-mock-field">
+                  <div class="app-mock-label">Language</div>
+                  <div class="app-mock-select">German</div>
+                </div>
+              </div>
+            </div>
+            <div class="app-line" data-delay="400">
+              <div class="app-mock-btn app-mock-btn--primary" id="notionGenBtn">Generate</div>
+            </div>
+            <div class="app-line" data-delay="800"><div class="app-mock-divider"></div></div>
+            <div class="app-line" data-delay="400">
+              <div class="app-mock-preview" id="notionPreview">
+                <h4>Preview</h4>
+              </div>
+            </div>
+            <div class="app-line" data-delay="500">
+              <div class="app-mock-btn" id="notionSaveBtn" style="background:var(--bg-card);color:var(--text-secondary);border:1px solid var(--border);">Save to Notion</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fourth Project: Portfolio Website -->
+  <div class="project-showcase project-showcase--reversed" style="margin-top:6rem;padding-top:6rem;border-top:1px solid var(--border);">
+    <div class="reveal-left" style="transition-delay:0.2s">
+      <div class="editor-mock" id="editorMock">
+        <div class="editor-bar">
+          <div class="browser-dots"><span></span><span></span><span></span></div>
+          <div class="editor-tab">index.html</div>
+        </div>
+        <div class="editor-body" id="editorBody">
+          <div class="code-line" data-delay="200"><span class="code-ln">1</span><span class="code-content"><span class="syn-comment">/* Animated Network Mesh */</span></span></div>
+          <div class="code-line" data-delay="150"><span class="code-ln">2</span><span class="code-content"><span class="syn-kw">const</span> <span class="syn-fn">canvas</span> <span class="syn-punct">=</span> document.<span class="syn-fn">getElementById</span><span class="syn-punct">(</span><span class="syn-str">'hero-canvas'</span><span class="syn-punct">);</span></span></div>
+          <div class="code-line" data-delay="150"><span class="code-ln">3</span><span class="code-content"><span class="syn-kw">const</span> <span class="syn-fn">ctx</span> <span class="syn-punct">=</span> canvas.<span class="syn-fn">getContext</span><span class="syn-punct">(</span><span class="syn-str">'2d'</span><span class="syn-punct">);</span></span></div>
+          <div class="code-line" data-delay="100"><span class="code-ln">4</span><span class="code-content"></span></div>
+          <div class="code-line" data-delay="150"><span class="code-ln">5</span><span class="code-content"><span class="syn-kw">const</span> CONFIG <span class="syn-punct">= {</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">6</span><span class="code-content">  <span class="syn-prop">nodeCount</span><span class="syn-punct">:</span> <span class="syn-num">80</span><span class="syn-punct">,</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">7</span><span class="code-content">  <span class="syn-prop">connectionDistance</span><span class="syn-punct">:</span> <span class="syn-num">180</span><span class="syn-punct">,</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">8</span><span class="code-content">  <span class="syn-prop">mouseRadius</span><span class="syn-punct">:</span> <span class="syn-num">200</span><span class="syn-punct">,</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">9</span><span class="code-content">  <span class="syn-prop">accentRGB</span><span class="syn-punct">:</span> <span class="syn-punct">[</span><span class="syn-num">0</span><span class="syn-punct">,</span> <span class="syn-num">212</span><span class="syn-punct">,</span> <span class="syn-num">170</span><span class="syn-punct">]</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">10</span><span class="code-content"><span class="syn-punct">};</span></span></div>
+          <div class="code-line" data-delay="100"><span class="code-ln">11</span><span class="code-content"></span></div>
+          <div class="code-line" data-delay="150"><span class="code-ln">12</span><span class="code-content"><span class="syn-comment">/* Scroll Reveal System */</span></span></div>
+          <div class="code-line" data-delay="150"><span class="code-ln">13</span><span class="code-content"><span class="syn-kw">const</span> <span class="syn-fn">observer</span> <span class="syn-punct">=</span> <span class="syn-kw">new</span> <span class="syn-fn">IntersectionObserver</span><span class="syn-punct">((</span>entries<span class="syn-punct">) => {</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">14</span><span class="code-content">  entries.<span class="syn-fn">forEach</span><span class="syn-punct">(</span>entry <span class="syn-punct">=></span> <span class="syn-punct">{</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">15</span><span class="code-content">    <span class="syn-kw">if</span> <span class="syn-punct">(</span>entry.<span class="syn-prop">isIntersecting</span><span class="syn-punct">)</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">16</span><span class="code-content">      entry.<span class="syn-prop">target</span>.<span class="syn-prop">classList</span>.<span class="syn-fn">add</span><span class="syn-punct">(</span><span class="syn-str">'visible'</span><span class="syn-punct">);</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">17</span><span class="code-content">  <span class="syn-punct">});</span></span></div>
+          <div class="code-line" data-delay="120"><span class="code-ln">18</span><span class="code-content"><span class="syn-punct">});</span></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="project-info">
+      <h3 class="project-title reveal-right" style="transition-delay:0.1s">Portfolio Website</h3>
+      <p class="project-desc reveal-right" style="transition-delay:0.2s">
+        Diese Website selbst – eine performante Single-File-Anwendung mit animiertem Canvas-Hintergrund, vielfältigen Scroll-Animationen und interaktiven Projekt-Showcases. Gebaut ohne Frameworks, rein mit vanilla HTML, CSS und JavaScript.
+      </p>
+      <div class="project-tags reveal-right" style="transition-delay:0.3s">
+        <span class="project-tag">HTML5</span>
+        <span class="project-tag">CSS3</span>
+        <span class="project-tag">JavaScript</span>
+        <span class="project-tag">Canvas API</span>
+        <span class="project-tag">Intersection Observer</span>
+      </div>
+      <ul class="project-features reveal-right" style="transition-delay:0.4s">
+        <li>Animiertes Partikel-Netzwerk mit Maus-Interaktion</li>
+        <li>4 verschiedene Scroll-Animationstypen</li>
+        <li>Interaktive Projekt-Demos (Chat, Terminal, Browser, Editor)</li>
+        <li>Responsive Design ohne externe Frameworks</li>
+        <li>Single-File Architecture (HTML + CSS + JS)</li>
       </ul>
     </div>
   </div>
@@ -1936,6 +2329,115 @@ footer {
   }, { threshold: 0.2 });
 
   observer.observe(chat);
+})();
+
+/* ═══════════════════════════════════════════
+   Notion Browser Mockup Animation
+   ═══════════════════════════════════════════ */
+(function() {
+  const browser = document.getElementById('browserNotion');
+  if (!browser) return;
+
+  const lines = browser.querySelectorAll('.app-line');
+  const topicInput = document.getElementById('notionTopicInput');
+  const genBtn = document.getElementById('notionGenBtn');
+  const preview = document.getElementById('notionPreview');
+  const saveBtn = document.getElementById('notionSaveBtn');
+  let animated = false;
+
+  function typeInto(el, text, speed, cb) {
+    let i = 0;
+    function t() {
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        setTimeout(t, speed);
+      } else if (cb) cb();
+    }
+    t();
+  }
+
+  function animateBrowser() {
+    if (animated) return;
+    animated = true;
+
+    let totalDelay = 0;
+
+    lines.forEach((line, idx) => {
+      const delay = parseInt(line.dataset.delay) || 400;
+      totalDelay += delay;
+
+      setTimeout(() => {
+        line.classList.add('show');
+      }, totalDelay);
+    });
+
+    // After all lines visible: type topic
+    totalDelay += 600;
+    setTimeout(() => {
+      typeInto(topicInput, 'Die Zukunft der KI-Agenten', 35, () => {
+        // Flash generate button
+        setTimeout(() => {
+          genBtn.style.boxShadow = '0 0 20px var(--accent-glow)';
+          // Show preview content
+          setTimeout(() => {
+            genBtn.style.boxShadow = '';
+            preview.innerHTML = '<h4>KI-Agenten: Die nächste Revolution</h4><strong>Einleitung</strong><br>Autonome KI-Agenten verändern grundlegend, wie wir mit Technologie...<br><br><strong>Kernpunkte</strong><ul><li>Multi-Step Reasoning</li><li>Tool-Integration via MCP</li><li>Selbstständige Aufgabenlösung</li></ul>';
+            // Glow save button
+            setTimeout(() => {
+              saveBtn.style.background = 'var(--accent)';
+              saveBtn.style.color = '#06080d';
+              saveBtn.style.boxShadow = '0 0 20px var(--accent-glow)';
+              saveBtn.textContent = '✓ Saved to Notion';
+            }, 1000);
+          }, 800);
+        }, 400);
+      });
+    }, totalDelay);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) animateBrowser();
+    });
+  }, { threshold: 0.25 });
+
+  observer.observe(browser);
+})();
+
+/* ═══════════════════════════════════════════
+   Code Editor Mockup Animation
+   ═══════════════════════════════════════════ */
+(function() {
+  const editor = document.getElementById('editorMock');
+  if (!editor) return;
+
+  const lines = editor.querySelectorAll('.code-line');
+  let animated = false;
+
+  function animateEditor() {
+    if (animated) return;
+    animated = true;
+
+    let totalDelay = 0;
+
+    lines.forEach((line) => {
+      const delay = parseInt(line.dataset.delay) || 150;
+      totalDelay += delay;
+
+      setTimeout(() => {
+        line.classList.add('show');
+      }, totalDelay);
+    });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) animateEditor();
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(editor);
 })();
 
 /* ═══════════════════════════════════════════
