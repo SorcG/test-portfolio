@@ -66,6 +66,21 @@ body {
   position: relative;
 }
 
+body::before {
+  content: '';
+  position: fixed;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.07) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  left: 50%;
+  top: var(--spotlight-y, 0%);
+  transform: translate(-50%, -50%);
+}
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-deep); }
@@ -450,18 +465,18 @@ section {
 /* ─── Reveal Animations ─── */
 .reveal, .reveal-left, .reveal-right, .reveal-scale {
   opacity: 0;
-  transition: opacity 0.9s var(--ease),
-              transform 0.9s var(--ease);
+  transition: opacity 1.1s var(--ease),
+              transform 1.1s var(--ease);
 }
 
-.reveal { transform: translateY(50px); }
-.reveal-left { transform: translateX(-80px); }
-.reveal-right { transform: translateX(80px); }
-.reveal-scale { transform: scale(0.82) translateY(30px); }
+.reveal { transform: perspective(800px) translateY(80px) rotateX(8deg); }
+.reveal-left { transform: translateX(-120px); }
+.reveal-right { transform: translateX(120px); }
+.reveal-scale { transform: scale(0.7) translateY(60px); }
 
 .reveal.visible, .reveal-left.visible, .reveal-right.visible, .reveal-scale.visible {
   opacity: 1;
-  transform: translateY(0) translateX(0) scale(1);
+  transform: perspective(800px) translateY(0) translateX(0) scale(1) rotateX(0) rotateY(0);
 }
 
 /* ─── Floating Background Shapes ─── */
@@ -733,16 +748,10 @@ section {
   opacity: 0;
 }
 
-/* ─── Divider Expand Animation ─── */
+/* ─── Divider Expand Animation (scroll-driven) ─── */
 .section-divider {
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 1s var(--ease) 0.3s;
-}
-
-.reveal.visible .section-divider,
-.reveal-scale.visible .section-divider {
-  transform: scaleX(1);
 }
 
 #kontakt .section-divider {
@@ -819,6 +828,7 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 1.5rem;
+  perspective: 1000px;
 }
 
 .competence-card {
@@ -827,8 +837,18 @@ section {
   padding: 2.5rem;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.4s, transform 0.4s, box-shadow 0.4s;
   cursor: default;
+  opacity: 0;
+  transform: perspective(800px) rotateY(60deg) translateX(40px) scale(0.85);
+  transition: opacity 0.8s var(--ease),
+              transform 0.8s var(--ease),
+              border-color 0.4s,
+              box-shadow 0.4s;
+}
+
+.competence-card.visible {
+  opacity: 1;
+  transform: perspective(800px) rotateY(0) translateX(0) scale(1);
 }
 
 .competence-card::before {
@@ -855,6 +875,8 @@ section {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--text-muted);
+  display: inline-block;
+  will-change: transform;
   letter-spacing: 0.1em;
   margin-bottom: 1.5rem;
 }
@@ -1105,10 +1127,20 @@ section {
   padding: 1.5rem 0.75rem;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  transition: border-color 0.4s, transform 0.4s, box-shadow 0.4s;
+  transition: opacity 0.5s var(--ease),
+              transform 0.5s var(--ease),
+              border-color 0.4s,
+              box-shadow 0.4s;
   cursor: default;
   position: relative;
   overflow: hidden;
+  opacity: 0;
+  transform: translateY(25px) scale(0.88);
+}
+
+.stack-item.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .stack-item::before {
@@ -2425,38 +2457,118 @@ footer {
 })();
 
 /* ═══════════════════════════════════════════
-   Scroll Reveal (Intersection Observer)
+   Scroll Reveal with Re-Trigger (Intersection Observer)
    ═══════════════════════════════════════════ */
 (function() {
+  const isDesktop = window.innerWidth >= 768;
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
+      } else if (isDesktop) {
+        // Re-trigger on desktop when scrolling back
+        entry.target.classList.remove('visible');
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
+
+  // Competence cards: stagger + 3D flip
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const cards = entry.target.querySelectorAll('.competence-card');
+        cards.forEach((card, i) => {
+          card.style.transitionDelay = `${i * 0.12}s`;
+          requestAnimationFrame(() => card.classList.add('visible'));
+        });
+      } else if (isDesktop) {
+        const cards = entry.target.querySelectorAll('.competence-card');
+        cards.forEach(card => {
+          card.style.transitionDelay = '0s';
+          card.classList.remove('visible');
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+
+  const grid = document.querySelector('.competence-grid');
+  if (grid) cardObserver.observe(grid);
 })();
 
 /* ═══════════════════════════════════════════
-   Parallax on Section Titles
+   Stack Item Cascade Stagger
+   ═══════════════════════════════════════════ */
+(function() {
+  const isDesktop = window.innerWidth >= 768;
+
+  const stackObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const items = entry.target.querySelectorAll('.stack-item');
+      if (entry.isIntersecting) {
+        items.forEach((item, i) => {
+          item.style.transitionDelay = `${i * 80}ms`;
+          requestAnimationFrame(() => item.classList.add('visible'));
+        });
+      } else if (isDesktop) {
+        items.forEach(item => {
+          item.style.transitionDelay = '0s';
+          item.classList.remove('visible');
+        });
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.stack-category').forEach(cat => stackObserver.observe(cat));
+})();
+
+/* ═══════════════════════════════════════════
+   Scroll-Progress-Driven Animations
    ═══════════════════════════════════════════ */
 (function() {
   const titles = document.querySelectorAll('.section-title');
+  const dividers = document.querySelectorAll('.section-divider');
+  const cardNumbers = document.querySelectorAll('.card-number');
+  const vh = window.innerHeight;
   let ticking = false;
+
+  function getProgress(el) {
+    const rect = el.getBoundingClientRect();
+    // 0 when element enters bottom, 1 when it reaches top quarter
+    return Math.min(1, Math.max(0, (vh - rect.top) / (vh * 0.75)));
+  }
 
   window.addEventListener('scroll', () => {
     if (!ticking) {
       requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
+        // Titles: parallax + scale + opacity
         titles.forEach(title => {
           const rect = title.getBoundingClientRect();
           const center = rect.top + rect.height / 2;
-          const viewCenter = window.innerHeight / 2;
+          const viewCenter = vh / 2;
           const offset = (center - viewCenter) * 0.06;
-          title.style.transform = `translateY(${offset}px)`;
+          const p = getProgress(title);
+          const scale = 0.92 + p * 0.08;
+          const opacity = 0.4 + p * 0.6;
+          title.style.transform = `translateY(${offset}px) scale(${scale})`;
+          title.style.opacity = opacity;
         });
+
+        // Dividers: scaleX linked to scroll progress
+        dividers.forEach(div => {
+          const p = getProgress(div);
+          div.style.transform = `scaleX(${p})`;
+        });
+
+        // Card numbers: subtle rotation
+        cardNumbers.forEach(cn => {
+          const p = getProgress(cn);
+          cn.style.transform = `rotate(${p * 360}deg)`;
+          cn.style.opacity = 0.3 + p * 0.7;
+        });
+
         ticking = false;
       });
       ticking = true;
@@ -2803,10 +2915,7 @@ footer {
    ═══════════════════════════════════════════ */
 (function() {
   const parallaxEls = document.querySelectorAll('[data-parallax]');
-  if (!parallaxEls.length) return;
-
-  // Skip heavy parallax on mobile
-  if (window.innerWidth < 768) return;
+  if (!parallaxEls.length || window.innerWidth < 768) return;
 
   let ticking = false;
 
@@ -2829,11 +2938,15 @@ footer {
 })();
 
 /* ═══════════════════════════════════════════
-   Ambient Orb Scroll Response
+   Ambient Orb Scroll — Organic Sine Drift + Breathing
    ═══════════════════════════════════════════ */
 (function() {
   const orbs = document.querySelectorAll('.ambient-orb');
   if (!orbs.length) return;
+
+  const docHeight = () => document.documentElement.scrollHeight - window.innerHeight;
+  const speeds = [0.04, -0.03, 0.025, -0.035, 0.02];
+  const phases = [0, 1.2, 2.5, 3.8, 5.0];
 
   let ticking = false;
 
@@ -2841,12 +2954,103 @@ footer {
     if (!ticking) {
       requestAnimationFrame(() => {
         const scrollY = window.scrollY;
-        const speeds = [0.03, -0.02, 0.015, -0.025, 0.018];
+        const progress = docHeight() > 0 ? scrollY / docHeight() : 0;
+
         orbs.forEach((orb, i) => {
           const speed = speeds[i] || 0.02;
-          orb.style.transform += ''; // keep CSS animation
-          orb.style.marginTop = `${scrollY * speed}px`;
+          const phase = phases[i] || 0;
+          // Sinusoidal drift for organic movement
+          const sineY = Math.sin(scrollY * 0.003 + phase) * 60;
+          const sineX = Math.cos(scrollY * 0.002 + phase) * 30;
+          // Breathing scale based on overall scroll progress
+          const scale = 0.85 + Math.sin(scrollY * 0.001 + phase) * 0.2;
+          // Opacity pulse — brighter in middle of page
+          const opacityMod = 0.7 + Math.sin(progress * Math.PI) * 0.3;
+
+          orb.style.marginTop = `${scrollY * speed + sineY}px`;
+          orb.style.marginLeft = `${sineX}px`;
+          orb.style.opacity = opacityMod;
+          orb.style.scale = scale;
         });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   Scroll Velocity Effects
+   ═══════════════════════════════════════════ */
+(function() {
+  if (window.innerWidth < 768) return;
+
+  const floats = document.querySelectorAll('.float-shape');
+  const noise = document.querySelector('.noise-overlay');
+  let lastScroll = 0;
+  let lastTime = performance.now();
+  let velocity = 0;
+  let smoothVelocity = 0;
+  let ticking = false;
+  let rafId;
+
+  window.addEventListener('scroll', () => {
+    const now = performance.now();
+    const dt = now - lastTime;
+    if (dt > 0) {
+      velocity = Math.abs(window.scrollY - lastScroll) / dt;
+    }
+    lastScroll = window.scrollY;
+    lastTime = now;
+
+    if (!ticking) {
+      ticking = true;
+      rafId = requestAnimationFrame(applyVelocity);
+    }
+  });
+
+  function applyVelocity() {
+    // Smooth velocity decay
+    smoothVelocity += (velocity - smoothVelocity) * 0.15;
+    velocity *= 0.95;
+
+    const v = Math.min(smoothVelocity, 5); // cap
+
+    // Float shapes stretch vertically
+    floats.forEach(f => {
+      f.style.filter = `blur(${v * 0.5}px)`;
+    });
+
+    // Noise overlay opacity pulse
+    if (noise) {
+      noise.style.opacity = 0.06 + v * 0.015;
+    }
+
+    if (smoothVelocity > 0.01) {
+      rafId = requestAnimationFrame(applyVelocity);
+    } else {
+      smoothVelocity = 0;
+      floats.forEach(f => f.style.filter = '');
+      if (noise) noise.style.opacity = '';
+      ticking = false;
+    }
+  }
+})();
+
+/* ═══════════════════════════════════════════
+   Gradient Spotlight — Follows Scroll Position
+   ═══════════════════════════════════════════ */
+(function() {
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const docH = document.documentElement.scrollHeight;
+        // Move the body::before gradient spotlight along with scroll
+        const yPos = (scrollY / docH) * 100;
+        document.body.style.setProperty('--spotlight-y', `${yPos}%`);
         ticking = false;
       });
       ticking = true;
