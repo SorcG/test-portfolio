@@ -607,6 +607,216 @@ section {
   line-height: 1.7;
 }
 
+/* ─── Projects Section ─── */
+.project-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+  margin-top: 3rem;
+}
+
+.project-info {
+  padding-top: 1rem;
+}
+
+.project-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.project-desc {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.project-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  border: 1px solid rgba(0, 212, 170, 0.25);
+  padding: 0.35rem 0.75rem;
+  letter-spacing: 0.05em;
+  background: var(--accent-dim);
+}
+
+.project-features {
+  list-style: none;
+  padding: 0;
+}
+
+.project-features li {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 0.4rem 0;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.project-features li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+/* ─── Telegram Chat Mockup ─── */
+.tg-chat {
+  background: #0e1621;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 480px;
+}
+
+.tg-header {
+  background: #17212b;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tg-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #0088cc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.tg-header-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.tg-bot-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e8edf5;
+}
+
+.tg-status {
+  font-size: 0.7rem;
+  color: var(--accent);
+}
+
+.tg-messages {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 520px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.tg-msg {
+  max-width: 85%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s, transform 0.3s;
+  position: relative;
+}
+
+.tg-msg.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tg-msg--user {
+  background: #2b5278;
+  color: #e8edf5;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.tg-msg--bot {
+  background: #182533;
+  color: #dde4ec;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.tg-msg--bot strong {
+  color: #e8edf5;
+}
+
+.tg-msg--bot ul {
+  margin: 0.3rem 0;
+  padding-left: 0.4rem;
+  list-style: none;
+}
+
+.tg-msg--bot ul li {
+  padding: 0.15rem 0;
+}
+
+.tg-msg .tg-time {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.35);
+  float: right;
+  margin-left: 0.75rem;
+  margin-top: 0.3rem;
+}
+
+.tg-typing {
+  display: none;
+  align-self: flex-start;
+  padding: 0.6rem 1rem;
+  background: #182533;
+  border-radius: 12px;
+  border-bottom-left-radius: 4px;
+  gap: 4px;
+  align-items: center;
+}
+
+.tg-typing.show {
+  display: flex;
+}
+
+.tg-typing span {
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: typingDot 1.2s ease-in-out infinite;
+}
+
+.tg-typing span:nth-child(2) { animation-delay: 0.15s; }
+.tg-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typingDot {
+  0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+  30% { opacity: 1; transform: scale(1); }
+}
+
 /* ─── Contact Section ─── */
 #kontakt {
   text-align: center;
@@ -715,6 +925,19 @@ footer {
     flex-direction: column;
     gap: 1rem;
   }
+
+  .project-showcase {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .tg-chat {
+    max-width: 100%;
+  }
+
+  .tg-messages {
+    max-height: 400px;
+  }
 }
 </style>
 </head>
@@ -726,6 +949,7 @@ footer {
   <ul class="nav-links" id="navLinks">
     <li><a href="#ueber-mich">Über mich</a></li>
     <li><a href="#kompetenzen">Kompetenzen</a></li>
+    <li><a href="#projekte">Projekte</a></li>
     <li><a href="#kontakt">Kontakt</a></li>
   </ul>
   <button class="nav-toggle" id="navToggle" aria-label="Navigation öffnen">
@@ -863,10 +1087,117 @@ footer {
   </div>
 </section>
 
+<!-- ─── Projekte ─── -->
+<section id="projekte">
+  <div class="section-float-container">
+    <div class="float-shape float-shape--circle" style="top:10%;right:3%"></div>
+    <div class="float-shape float-shape--cross" style="top:70%;left:8%"></div>
+  </div>
+  <div class="reveal">
+    <span class="section-label">// 03 — Projekte</span>
+    <h2 class="section-title">Was ich gebaut habe<span style="color:var(--accent)">.</span></h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="project-showcase">
+    <div class="project-info">
+      <h3 class="project-title reveal-left" style="transition-delay:0.1s">Claude AI – Persönlicher Telegram-Assistent</h3>
+      <p class="project-desc reveal-left" style="transition-delay:0.2s">
+        Ein intelligenter Telegram-Bot, der als persönlicher KI-Assistent fungiert. Basierend auf der Claude API von Anthropic versteht er Kontext über mehrere Nachrichten hinweg und liefert hilfreiche, personalisierte Antworten – von Alltagsfragen bis zur Reiseplanung.
+      </p>
+      <div class="project-tags reveal-left" style="transition-delay:0.3s">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">Claude API</span>
+        <span class="project-tag">Telegram Bot API</span>
+        <span class="project-tag">asyncio</span>
+        <span class="project-tag">systemd</span>
+      </div>
+      <ul class="project-features reveal-left" style="transition-delay:0.4s">
+        <li>Per-User Konversationshistorie mit Kontextverständnis</li>
+        <li>Asynchrone Architektur für parallele Nutzer</li>
+        <li>Modularer Aufbau mit 5 spezialisierten Modulen</li>
+        <li>Production-ready Deployment via systemd auf VPS</li>
+        <li>Rate-Limiting & robuste Fehlerbehandlung</li>
+      </ul>
+    </div>
+    <div class="reveal-right" style="transition-delay:0.2s">
+      <div class="tg-chat" id="tgChat">
+        <div class="tg-header">
+          <div class="tg-avatar">AI</div>
+          <div class="tg-header-info">
+            <span class="tg-bot-name">Claude Assistent</span>
+            <span class="tg-status">online</span>
+          </div>
+        </div>
+        <div class="tg-messages" id="tgMessages">
+
+          <div class="tg-msg tg-msg--user" data-delay="300">
+            Kannst du mir weiterhelfen?
+            <span class="tg-time">14:22</span>
+          </div>
+
+          <div class="tg-msg tg-msg--bot" data-delay="1200">
+            Natürlich gerne! 😊<br><br>
+            Wie kann ich dir helfen? Schreib mir einfach, worum es geht – egal ob Fragen, Tipps oder etwas anderes.
+            <span class="tg-time">14:22</span>
+          </div>
+
+          <div class="tg-msg tg-msg--user" data-delay="1500">
+            Ich möchte im Sommer 5 Tage nach Lissabon reisen. Was sind die Highlights?
+            <span class="tg-time">14:23</span>
+          </div>
+
+          <div class="tg-msg tg-msg--bot" data-delay="2000">
+            Lissabon im Sommer ist großartig! Hier sind die Top-Highlights:<br><br>
+            <strong>Muss man sehen:</strong>
+            <ul>
+              <li><strong>Pastéis de Nata</strong> 🥐 – probieren im Pastéis de Belém</li>
+              <li><strong>Belém-Viertel</strong> – historische Architektur</li>
+              <li><strong>Alfama</strong> – verwinkelte Gässchen, authentisch</li>
+            </ul>
+            <strong>Aktivitäten:</strong>
+            <ul>
+              <li>🚡 <strong>Tram 28</strong> fahren – ikonisch & günstig</li>
+              <li>🏰 <strong>Sintra-Ausflug</strong> – Pena-Palast</li>
+              <li>🏖️ <strong>Cascais</strong> – Strand, 25 Min. mit der Bahn</li>
+            </ul>
+            Hast du schon Hotel im Blick oder brauchst du Tipps?
+            <span class="tg-time">14:23</span>
+          </div>
+
+          <div class="tg-msg tg-msg--user" data-delay="1500">
+            Ich bin eher der Typ für Street Food und weniger Touristen-Spots.
+            <span class="tg-time">14:24</span>
+          </div>
+
+          <div class="tg-msg tg-msg--bot" data-delay="2000">
+            Perfekt! Dann hat Lissabon noch viel mehr für dich:<br><br>
+            <strong>Street Food & Märkte:</strong>
+            <ul>
+              <li>🍢 <strong>Time Out Market</strong> – lokale Köche</li>
+              <li><strong>Feira da Ladra</strong> – Flohmarkt zum Snacken</li>
+            </ul>
+            <strong>Echte Neighborhood-Vibes:</strong>
+            <ul>
+              <li><strong>Marvila</strong> – Streetart, junge Szene</li>
+              <li><strong>Graça</strong> – ruhig, weniger Touristen</li>
+            </ul>
+            <strong>Food-Geheimtipp:</strong> Kleine <strong>Tascas</strong> (Tavernen) statt Restaurants – und die Gegend um Calçada do Combro 🍷
+            <span class="tg-time">14:24</span>
+          </div>
+
+          <div class="tg-typing" id="tgTyping">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ─── Kontakt ─── -->
 <section id="kontakt">
   <div class="reveal">
-    <span class="section-label">// 03 — Kontakt</span>
+    <span class="section-label">// 04 — Kontakt</span>
     <h2 class="section-title">Lass uns sprechen<span style="color:var(--accent)">.</span></h2>
     <div class="section-divider" style="margin-left:auto;margin-right:auto;"></div>
   </div>
@@ -1099,6 +1430,72 @@ footer {
 
   const statsContainer = document.querySelector('.about-stats');
   if (statsContainer) observer.observe(statsContainer);
+})();
+
+/* ═══════════════════════════════════════════
+   Telegram Chat Animation
+   ═══════════════════════════════════════════ */
+(function() {
+  const chat = document.getElementById('tgChat');
+  if (!chat) return;
+
+  const messagesContainer = document.getElementById('tgMessages');
+  const messages = messagesContainer.querySelectorAll('.tg-msg');
+  const typing = document.getElementById('tgTyping');
+  let animated = false;
+
+  function scrollChat() {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  function animateChat() {
+    if (animated) return;
+    animated = true;
+
+    let totalDelay = 0;
+
+    messages.forEach((msg, i) => {
+      const msgDelay = parseInt(msg.dataset.delay) || 800;
+      const isBot = msg.classList.contains('tg-msg--bot');
+
+      if (isBot) {
+        // Show typing indicator before bot message
+        setTimeout(() => {
+          typing.classList.add('show');
+          scrollChat();
+        }, totalDelay);
+
+        totalDelay += msgDelay;
+
+        // Hide typing, show bot message
+        setTimeout(() => {
+          typing.classList.remove('show');
+          msg.classList.add('show');
+          scrollChat();
+        }, totalDelay);
+      } else {
+        totalDelay += msgDelay;
+
+        // Show user message
+        setTimeout(() => {
+          msg.classList.add('show');
+          scrollChat();
+        }, totalDelay);
+      }
+
+      totalDelay += 400;
+    });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateChat();
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(chat);
 })();
 
 /* ═══════════════════════════════════════════
