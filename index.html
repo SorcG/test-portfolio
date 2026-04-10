@@ -466,46 +466,20 @@ section {
 .reveal, .reveal-left, .reveal-right, .reveal-scale {
   opacity: 0;
   transition: opacity 1s var(--ease),
-              transform 1s var(--ease),
-              clip-path 1.2s var(--ease);
+              transform 1.1s var(--ease);
 }
 
-.reveal {
-  transform: translateY(60px);
-  clip-path: inset(20% 10% 20% 10%);
-}
-.reveal-left {
-  transform: translateX(-100px) rotate(-2deg);
-  clip-path: inset(0 100% 0 0);
-}
-.reveal-right {
-  transform: translateX(100px) rotate(2deg);
-  clip-path: inset(0 0 0 100%);
-}
-.reveal-scale {
-  transform: scale(0.6) translateY(40px);
-  clip-path: circle(0% at 50% 50%);
-}
+.reveal        { transform: perspective(1000px) translateY(80px) rotateX(12deg); }
+.reveal-left   { transform: perspective(1000px) translateX(-120px) rotateY(-15deg); }
+.reveal-right  { transform: perspective(1000px) translateX(120px) rotateY(15deg); }
+.reveal-scale  { transform: scale(0.65) translateY(60px); }
 
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-  clip-path: inset(0% 0% 0% 0%);
-}
-.reveal-left.visible {
-  opacity: 1;
-  transform: translateX(0) rotate(0);
-  clip-path: inset(0 0 0 0);
-}
-.reveal-right.visible {
-  opacity: 1;
-  transform: translateX(0) rotate(0);
-  clip-path: inset(0 0 0 0);
-}
+.reveal.visible,
+.reveal-left.visible,
+.reveal-right.visible,
 .reveal-scale.visible {
   opacity: 1;
-  transform: scale(1) translateY(0);
-  clip-path: circle(100% at 50% 50%);
+  transform: perspective(1000px) translateY(0) translateX(0) scale(1) rotateX(0) rotateY(0);
 }
 
 /* ─── Section Label Scramble ─── */
@@ -2665,25 +2639,21 @@ footer {
 })();
 
 /* ═══════════════════════════════════════════
-   Scroll Reveal with Re-Trigger (Intersection Observer)
+   Scroll Reveal (Intersection Observer — one-shot)
    ═══════════════════════════════════════════ */
 (function() {
-  const isDesktop = window.innerWidth >= 768;
-
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-      } else if (isDesktop) {
-        // Re-trigger on desktop when scrolling back
-        entry.target.classList.remove('visible');
+        observer.unobserve(entry.target); // fire once, stay visible
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
 
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
 
-  // Competence cards: stagger + 3D flip
+  // Competence cards: stagger 3D flip — fire once
   const cardObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -2692,12 +2662,7 @@ footer {
           card.style.transitionDelay = `${i * 0.12}s`;
           requestAnimationFrame(() => card.classList.add('visible'));
         });
-      } else if (isDesktop) {
-        const cards = entry.target.querySelectorAll('.competence-card');
-        cards.forEach(card => {
-          card.style.transitionDelay = '0s';
-          card.classList.remove('visible');
-        });
+        cardObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.1 });
@@ -2707,27 +2672,21 @@ footer {
 })();
 
 /* ═══════════════════════════════════════════
-   Stack Item Cascade Stagger
+   Stack Item Cascade Stagger — fire once
    ═══════════════════════════════════════════ */
 (function() {
-  const isDesktop = window.innerWidth >= 768;
-
   const stackObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      const items = entry.target.querySelectorAll('.stack-item');
       if (entry.isIntersecting) {
+        const items = entry.target.querySelectorAll('.stack-item');
         items.forEach((item, i) => {
           item.style.transitionDelay = `${i * 80}ms`;
           requestAnimationFrame(() => item.classList.add('visible'));
         });
-      } else if (isDesktop) {
-        items.forEach(item => {
-          item.style.transitionDelay = '0s';
-          item.classList.remove('visible');
-        });
+        stackObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.1 });
 
   document.querySelectorAll('.stack-category').forEach(cat => stackObserver.observe(cat));
 })();
