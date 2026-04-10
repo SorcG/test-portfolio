@@ -2721,10 +2721,9 @@ footer {
           div.style.transform = `scaleX(${p})`;
         });
 
-        // Card numbers: subtle rotation
+        // Card numbers: fade in
         cardNumbers.forEach(cn => {
           const p = getProgress(cn);
-          cn.style.transform = `rotate(${p * 360}deg)`;
           cn.style.opacity = 0.3 + p * 0.7;
         });
 
