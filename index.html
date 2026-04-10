@@ -2500,20 +2500,37 @@ footer {
   const chars = [];
   let charIndex = 0;
 
-  // Split text nodes into individual <span class="char"> elements
+  // Split text nodes into individual <span class="char"> elements, grouped by word
   function processNode(node) {
     if (node.nodeType === 3) { // Text node
       const text = node.textContent;
       const fragment = document.createDocumentFragment();
-      for (let i = 0; i < text.length; i++) {
-        const span = document.createElement('span');
-        span.className = 'char';
-        span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
-        span.style.animationDelay = `${0.4 + charIndex * 0.05}s`;
-        chars.push(span);
-        fragment.appendChild(span);
-        charIndex++;
-      }
+      const words = text.split(/( )/);
+      words.forEach(word => {
+        if (word === ' ') {
+          const space = document.createElement('span');
+          space.className = 'char';
+          space.textContent = '\u00A0';
+          space.style.animationDelay = `${0.4 + charIndex * 0.05}s`;
+          chars.push(space);
+          fragment.appendChild(space);
+          charIndex++;
+        } else if (word.length > 0) {
+          const wordWrap = document.createElement('span');
+          wordWrap.style.whiteSpace = 'nowrap';
+          wordWrap.style.display = 'inline-flex';
+          for (let i = 0; i < word.length; i++) {
+            const span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = word[i];
+            span.style.animationDelay = `${0.4 + charIndex * 0.05}s`;
+            chars.push(span);
+            wordWrap.appendChild(span);
+            charIndex++;
+          }
+          fragment.appendChild(wordWrap);
+        }
+      });
       return fragment;
     } else if (node.nodeType === 1) { // Element node (like <span class="accent">)
       const clone = node.cloneNode(false);
