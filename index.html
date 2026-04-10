@@ -1614,9 +1614,128 @@ section {
   text-align: center;
 }
 
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  text-align: left;
+  max-width: 900px;
+  margin: 3rem auto 0;
+}
+
+.contact-photo-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  aspect-ratio: 3 / 4;
+  max-width: 320px;
+  border: 1px solid var(--border);
+}
+
+.contact-photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.scan-line {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.7;
+  animation: scanMove 3s ease-in-out infinite;
+  z-index: 2;
+  box-shadow: 0 0 12px rgba(0, 212, 170, 0.4);
+}
+
+@keyframes scanMove {
+  0%, 100% { top: -10%; }
+  50% { top: 110%; }
+}
+
+.photo-glitch {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 212, 170, 0.03) 2px,
+    rgba(0, 212, 170, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.3s;
+}
+
+.contact-photo-wrapper:hover .photo-glitch {
+  animation: glitch 0.3s steps(4) infinite;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 212, 170, 0.06) 2px,
+    rgba(0, 212, 170, 0.06) 4px
+  );
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, -1px); }
+  80% { transform: translate(2px, 1px); }
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.availability-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 212, 170, 0.2);
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(0, 212, 170, 0); }
+}
+
+.contact-cta {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
 .contact-email {
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 3.5vw, 2.5rem);
+  font-size: clamp(1.25rem, 3.5vw, 2rem);
   font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
@@ -1643,9 +1762,8 @@ section {
 
 .contact-links {
   display: flex;
-  justify-content: center;
   gap: 2rem;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
 }
 
 .contact-links a {
@@ -1658,6 +1776,15 @@ section {
 }
 
 .contact-links a:hover { color: var(--accent); }
+
+.response-time {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-top: 2rem;
+  opacity: 0.6;
+}
 
 /* ─── Footer ─── */
 footer {
@@ -1715,9 +1842,23 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+
+  .contact-photo-wrapper {
+    max-width: 240px;
+    margin: 0 auto;
+  }
+
+  .contact-info {
+    align-items: center;
+  }
+
   .contact-links {
-    flex-direction: column;
-    gap: 1rem;
+    justify-content: center;
   }
 
   .project-showcase {
@@ -2353,12 +2494,27 @@ footer {
     <div class="float-shape float-shape--diamond" style="top:30%;left:auto;right:10%" data-parallax="-0.1"></div>
     <div class="float-shape float-shape--circle" style="bottom:20%;left:8%" data-parallax="0.13"></div>
   </div>
-  <div class="reveal-scale" style="transition-delay: 0.15s">
-    <a href="mailto:luca@sorci.com" class="contact-email">luca@sorci.com</a>
-  </div>
-  <div class="contact-links reveal-scale" style="transition-delay: 0.3s">
-    <a href="https://github.com/SorcG" target="_blank">GitHub</a>
-    <a href="https://www.linkedin.com/in/luca-sorci-676b05311/" target="_blank">LinkedIn</a>
+  <div class="contact-grid">
+    <div class="contact-photo reveal-left" style="transition-delay: 0.15s">
+      <div class="contact-photo-wrapper">
+        <img src="luca1.jpg" alt="Luca Sorci" />
+        <div class="scan-line"></div>
+        <div class="photo-glitch"></div>
+      </div>
+    </div>
+    <div class="contact-info reveal-right" style="transition-delay: 0.2s">
+      <div class="availability-badge">
+        <span class="pulse-dot"></span>
+        Aktuell verfügbar für Projekte
+      </div>
+      <p class="contact-cta">Du hast eine Idee, ein Projekt oder eine Herausforderung? Ich freue mich auf deine Nachricht.</p>
+      <a href="mailto:luca@sorci.com" class="contact-email">luca@sorci.com</a>
+      <div class="contact-links">
+        <a href="https://github.com/SorcG" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/luca-sorci-676b05311/" target="_blank">LinkedIn</a>
+      </div>
+      <p class="response-time">Antwort in der Regel innerhalb von 24h</p>
+    </div>
   </div>
 </section>
 
