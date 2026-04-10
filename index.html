@@ -63,6 +63,124 @@ body {
 ::-webkit-scrollbar-track { background: var(--bg-deep); }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
+/* ─── Custom Cursor Glow ─── */
+.cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(circle, rgba(0, 212, 170, 0.07) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
+.cursor-glow.active {
+  opacity: 1;
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s, opacity 0.3s;
+  opacity: 0;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.cursor-dot.active {
+  opacity: 1;
+}
+
+.cursor-dot.hover {
+  transform: translate(-50%, -50%) scale(2.5);
+  background: transparent;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* ─── Scroll Progress Bar ─── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), rgba(0, 212, 170, 0.5));
+  z-index: 101;
+  transition: width 0.05s linear;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* ─── Page Loader ─── */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: var(--bg-deep);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s, visibility 0.6s;
+}
+
+.page-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-logo {
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  opacity: 0;
+  transform: scale(0.8);
+  animation: loaderReveal 0.6s 0.2s forwards;
+}
+
+.loader-line {
+  width: 60px;
+  height: 2px;
+  background: var(--border);
+  margin-top: 1.5rem;
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loader-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  animation: loaderProgress 1.2s 0.5s forwards cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes loaderReveal {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes loaderProgress {
+  to { width: 100%; }
+}
+
+/* Hide cursor effects on touch devices */
+@media (hover: none) {
+  .cursor-glow, .cursor-dot { display: none; }
+}
+
 /* ─── Navigation ─── */
 nav {
   position: fixed;
@@ -1434,6 +1552,19 @@ footer {
 </head>
 <body>
 
+<!-- ─── Page Loader ─── -->
+<div class="page-loader" id="pageLoader">
+  <div class="loader-logo">LS_</div>
+  <div class="loader-line"></div>
+</div>
+
+<!-- ─── Scroll Progress ─── -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ─── Custom Cursor ─── -->
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
 <!-- ─── Navigation ─── -->
 <nav id="navbar">
   <a href="#hero" class="nav-logo">LS_</a>
@@ -2530,6 +2661,81 @@ footer {
 
   links.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => links.classList.remove('open'));
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   Page Loader
+   ═══════════════════════════════════════════ */
+(function() {
+  const loader = document.getElementById('pageLoader');
+  if (!loader) return;
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      loader.classList.add('hidden');
+    }, 1800);
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   Scroll Progress Bar
+   ═══════════════════════════════════════════ */
+(function() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = progress + '%';
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   Custom Cursor Glow
+   ═══════════════════════════════════════════ */
+(function() {
+  // Skip on touch devices
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  const glow = document.getElementById('cursorGlow');
+  const dot = document.getElementById('cursorDot');
+  if (!glow || !dot) return;
+
+  let mouseX = -500, mouseY = -500;
+  let glowX = -500, glowY = -500;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top = mouseY + 'px';
+    dot.classList.add('active');
+    glow.classList.add('active');
+  });
+
+  document.addEventListener('mouseleave', () => {
+    dot.classList.remove('active');
+    glow.classList.remove('active');
+  });
+
+  // Smooth follow for glow
+  function animateGlow() {
+    glowX += (mouseX - glowX) * 0.12;
+    glowY += (mouseY - glowY) * 0.12;
+    glow.style.left = glowX + 'px';
+    glow.style.top = glowY + 'px';
+    requestAnimationFrame(animateGlow);
+  }
+  animateGlow();
+
+  // Hover effect on interactive elements
+  const hoverTargets = document.querySelectorAll('a, button, .competence-card, .stack-item, .hero-cta, .nav-logo');
+  hoverTargets.forEach(el => {
+    el.addEventListener('mouseenter', () => dot.classList.add('hover'));
+    el.addEventListener('mouseleave', () => dot.classList.remove('hover'));
   });
 })();
 </script>
