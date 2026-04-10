@@ -300,18 +300,18 @@ nav.scrolled {
   height: 100vh;
   z-index: 0;
   pointer-events: none;
-  mask-image: radial-gradient(ellipse 120% 110% at 50% 50%, black 60%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 120% 110% at 50% 50%, black 60%, transparent 100%);
-}
-
-.hero-gradient {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 60%;
-  background: linear-gradient(to top, var(--bg-deep), transparent);
-  z-index: 1;
+  mask-image:
+    linear-gradient(to bottom, black 50%, transparent 100%),
+    linear-gradient(to top, black 50%, transparent 100%),
+    linear-gradient(to right, black 50%, transparent 100%),
+    linear-gradient(to left, black 50%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(to bottom, black 50%, transparent 100%),
+    linear-gradient(to top, black 50%, transparent 100%),
+    linear-gradient(to right, black 50%, transparent 100%),
+    linear-gradient(to left, black 50%, transparent 100%);
+  -webkit-mask-composite: source-in;
 }
 
 .hero-content {
@@ -1850,7 +1850,7 @@ footer {
 <!-- ─── Hero ─── -->
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
-  <div class="hero-gradient"></div>
+
   <div class="hero-content">
     <p class="hero-tag">KI-Entwicklung · Automatisierung · Agentic Systems</p>
     <h1 class="hero-name" id="heroName" style="perspective:600px;">Luca Sorci<span class="accent">.</span></h1>
