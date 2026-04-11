@@ -142,6 +142,275 @@ body::before {
   box-shadow: 0 0 8px var(--accent-glow);
 }
 
+/* ─── Vault Overlay ─── */
+.vault-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  background: var(--bg-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.vault-overlay.unlocked {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#vault-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Vault Door */
+.vault-door {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  pointer-events: none;
+}
+
+.vault-door-left,
+.vault-door-right {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  transition: transform 1.4s cubic-bezier(0.7, 0, 0.3, 1);
+  overflow: hidden;
+}
+
+.vault-door-left {
+  background: linear-gradient(135deg, #0c0f18 0%, #10141e 50%, #0a0d14 100%);
+  border-right: 1px solid rgba(0, 212, 170, 0.08);
+}
+
+.vault-door-right {
+  background: linear-gradient(225deg, #0c0f18 0%, #10141e 50%, #0a0d14 100%);
+  border-left: 1px solid rgba(0, 212, 170, 0.08);
+}
+
+/* Metallic texture lines */
+.vault-door-left::before,
+.vault-door-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 40px,
+    rgba(255, 255, 255, 0.01) 40px,
+    rgba(255, 255, 255, 0.01) 41px
+  );
+  pointer-events: none;
+}
+
+/* Center seam glow */
+.vault-door-left::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 10%, rgba(0, 212, 170, 0.15) 50%, transparent 90%);
+}
+
+.vault-door-right::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 10%, rgba(0, 212, 170, 0.15) 50%, transparent 90%);
+}
+
+/* Bolts */
+.vault-bolts {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.vault-door-left .vault-bolts {
+  right: 0;
+}
+
+.vault-door-right .vault-bolts {
+  left: 0;
+}
+
+.vault-bolt {
+  width: 40px;
+  height: 6px;
+  background: linear-gradient(90deg, rgba(0, 212, 170, 0.4), rgba(0, 212, 170, 0.8));
+  border-radius: 1px;
+  box-shadow: 0 0 10px rgba(0, 212, 170, 0.2);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+}
+
+/* Opening animation */
+.vault-door.opening .vault-door-left .vault-bolt {
+  transform: translateX(-50px);
+  opacity: 0;
+}
+
+.vault-door.opening .vault-door-right .vault-bolt {
+  transform: translateX(50px);
+  opacity: 0;
+}
+
+.vault-door.opening .vault-door-left {
+  transform: translateX(-105%);
+  transition-delay: 0.5s;
+}
+
+.vault-door.opening .vault-door-right {
+  transform: translateX(105%);
+  transition-delay: 0.5s;
+}
+
+/* Vault Content */
+.vault-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.vault-content.unlocking {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.vault-content.shake {
+  animation: vaultShake 0.5s ease;
+}
+
+@keyframes vaultShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.vault-lock-icon {
+  margin-bottom: 2rem;
+}
+
+.vault-lock-icon svg {
+  width: 48px;
+  height: 48px;
+  stroke: var(--accent);
+  fill: none;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 170, 0.3));
+}
+
+.vault-lock-icon .lock-shackle {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 12px 6px;
+}
+
+.vault-content.unlocking .lock-shackle {
+  transform: translateY(-4px) rotate(-15deg);
+}
+
+.vault-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.vault-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 2.5rem;
+}
+
+.vault-input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vault-input {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  padding: 0.8rem 1rem;
+  width: 280px;
+  text-align: center;
+  letter-spacing: 0.15em;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.vault-input::placeholder {
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.vault-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 4px 20px rgba(0, 212, 170, 0.12);
+}
+
+.vault-submit {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--bg-deep);
+  background: var(--accent);
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.vault-submit:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 20px rgba(0, 212, 170, 0.25);
+}
+
+.vault-submit:active {
+  transform: scale(0.98);
+}
+
+.vault-error {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #ff4455;
+  margin-top: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  letter-spacing: 0.05em;
+}
+
+.vault-error.show {
+  opacity: 1;
+}
+
 /* ─── Page Loader ─── */
 .page-loader {
   position: fixed;
@@ -1978,6 +2247,43 @@ footer {
 <!-- ─── Noise Grain Overlay ─── -->
 <div class="noise-overlay" aria-hidden="true"></div>
 
+<!-- ─── Vault Overlay ─── -->
+<div class="vault-overlay" id="vaultOverlay">
+  <canvas id="vault-particles"></canvas>
+  <div class="vault-door" id="vaultDoor">
+    <div class="vault-door-left">
+      <div class="vault-bolts">
+        <div class="vault-bolt"></div>
+        <div class="vault-bolt"></div>
+        <div class="vault-bolt"></div>
+      </div>
+    </div>
+    <div class="vault-door-right">
+      <div class="vault-bolts">
+        <div class="vault-bolt"></div>
+        <div class="vault-bolt"></div>
+        <div class="vault-bolt"></div>
+      </div>
+    </div>
+  </div>
+  <div class="vault-content" id="vaultContent">
+    <div class="vault-lock-icon">
+      <svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="11" width="14" height="11" rx="2" />
+        <path class="lock-shackle" d="M8 11V7a4 4 0 0 1 8 0v4" />
+        <circle cx="12" cy="16.5" r="1.5" fill="currentColor" stroke="none" style="color:var(--accent)" />
+      </svg>
+    </div>
+    <h2 class="vault-title">Zugang geschützt</h2>
+    <p class="vault-subtitle">Geben Sie den Zugangscode ein</p>
+    <div class="vault-input-group">
+      <input type="password" id="vaultPassword" class="vault-input" placeholder="Zugangscode" autocomplete="off" />
+      <button id="vaultSubmit" class="vault-submit">Entsperren</button>
+    </div>
+    <p class="vault-error" id="vaultError">Falscher Zugangscode</p>
+  </div>
+</div>
+
 <!-- ─── Page Loader ─── -->
 <div class="page-loader" id="pageLoader">
   <div class="loader-logo"><img src="logo.png" alt="Logo" /></div>
@@ -3265,16 +3571,160 @@ footer {
 })();
 
 /* ═══════════════════════════════════════════
+   Vault — Passwortschutz mit Tresor-Animation
+   ═══════════════════════════════════════════ */
+(function() {
+  const overlay = document.getElementById('vaultOverlay');
+  if (!overlay) return;
+
+  const PASS_HASH = '64733ff2588fe9a8d6b13441b9b23f9039f4d5e1ce8ac4c53b384bff8a084b8e';
+  const door = document.getElementById('vaultDoor');
+  const content = document.getElementById('vaultContent');
+  const input = document.getElementById('vaultPassword');
+  const submit = document.getElementById('vaultSubmit');
+  const error = document.getElementById('vaultError');
+  const loader = document.getElementById('pageLoader');
+
+  // Session-Check: wenn schon entsperrt, Vault sofort entfernen
+  if (sessionStorage.getItem('vault_unlocked')) {
+    overlay.remove();
+    return;
+  }
+
+  // ── Vault Ambient Particles ──
+  const vc = document.getElementById('vault-particles');
+  const vCtx = vc.getContext('2d');
+  let vW, vH, vParts = [], vAnim;
+
+  function vResize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    vW = vc.offsetWidth;
+    vH = vc.offsetHeight;
+    vc.width = vW * dpr;
+    vc.height = vH * dpr;
+    vCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function vCreate() {
+    vParts = [];
+    for (let i = 0; i < 50; i++) {
+      vParts.push({
+        x: Math.random() * vW,
+        y: Math.random() * vH,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        r: 0.5 + Math.random() * 1.5,
+        phase: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  let vTime = 0;
+  function vDraw() {
+    vTime += 0.005;
+    vCtx.clearRect(0, 0, vW, vH);
+
+    for (const p of vParts) {
+      p.x += p.vx + Math.sin(vTime + p.phase) * 0.05;
+      p.y += p.vy + Math.cos(vTime * 0.7 + p.phase) * 0.05;
+      if (p.x < 0) p.x = vW;
+      if (p.x > vW) p.x = 0;
+      if (p.y < 0) p.y = vH;
+      if (p.y > vH) p.y = 0;
+
+      const pulse = 0.3 + Math.sin(vTime * 2 + p.phase) * 0.2;
+      vCtx.fillStyle = `rgba(0,212,170,${pulse})`;
+      vCtx.beginPath();
+      vCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      vCtx.fill();
+    }
+
+    // Connections
+    for (let i = 0; i < vParts.length; i++) {
+      for (let j = i + 1; j < vParts.length; j++) {
+        const dx = vParts[i].x - vParts[j].x;
+        const dy = vParts[i].y - vParts[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 140) {
+          vCtx.strokeStyle = `rgba(0,212,170,${(1 - dist / 140) * 0.12})`;
+          vCtx.lineWidth = 0.5;
+          vCtx.beginPath();
+          vCtx.moveTo(vParts[i].x, vParts[i].y);
+          vCtx.lineTo(vParts[j].x, vParts[j].y);
+          vCtx.stroke();
+        }
+      }
+    }
+
+    vAnim = requestAnimationFrame(vDraw);
+  }
+
+  vResize();
+  vCreate();
+  vDraw();
+  window.addEventListener('resize', () => { vResize(); vCreate(); });
+
+  // ── Password Logic ──
+  async function hashPassword(pw) {
+    const data = new TextEncoder().encode(pw);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function tryUnlock() {
+    const hash = await hashPassword(input.value);
+    if (hash === PASS_HASH) {
+      sessionStorage.setItem('vault_unlocked', 'true');
+
+      // 1. Lock icon + content fade
+      content.classList.add('unlocking');
+
+      // 2. Bolzen zurückziehen + Tür öffnen
+      setTimeout(() => door.classList.add('opening'), 400);
+
+      // 3. Vault ausblenden → Loader sichtbar
+      setTimeout(() => {
+        cancelAnimationFrame(vAnim);
+        overlay.classList.add('unlocked');
+        // Loader starten
+        setTimeout(() => {
+          if (loader) loader.classList.add('hidden');
+        }, 800);
+      }, 2000);
+
+      // 4. Vault aus DOM
+      setTimeout(() => overlay.remove(), 2800);
+    } else {
+      error.classList.add('show');
+      content.classList.add('shake');
+      input.value = '';
+      setTimeout(() => {
+        error.classList.remove('show');
+        content.classList.remove('shake');
+      }, 800);
+    }
+  }
+
+  submit.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') tryUnlock();
+  });
+
+  // Auto-focus
+  setTimeout(() => input.focus(), 100);
+})();
+
+/* ═══════════════════════════════════════════
    Page Loader
    ═══════════════════════════════════════════ */
 (function() {
   const loader = document.getElementById('pageLoader');
   if (!loader) return;
-
+  // Wenn Vault aktiv → Vault steuert den Loader
+  if (document.getElementById('vaultOverlay')) return;
+  // Normaler Ablauf (Session bereits entsperrt)
   window.addEventListener('load', () => {
-    setTimeout(() => {
-      loader.classList.add('hidden');
-    }, 800);
+    setTimeout(() => loader.classList.add('hidden'), 800);
   });
 })();
 
