@@ -300,18 +300,8 @@ nav.scrolled {
   height: 100vh;
   z-index: 0;
   pointer-events: none;
-  mask-image:
-    linear-gradient(to bottom, black 50%, transparent 100%),
-    linear-gradient(to top, black 50%, transparent 100%),
-    linear-gradient(to right, black 50%, transparent 100%),
-    linear-gradient(to left, black 50%, transparent 100%);
-  mask-composite: intersect;
-  -webkit-mask-image:
-    linear-gradient(to bottom, black 50%, transparent 100%),
-    linear-gradient(to top, black 50%, transparent 100%),
-    linear-gradient(to right, black 50%, transparent 100%),
-    linear-gradient(to left, black 50%, transparent 100%);
-  -webkit-mask-composite: source-in;
+  mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, black 30%, transparent 70%);
 }
 
 .hero-content {
@@ -2660,7 +2650,7 @@ footer {
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     const vh = window.innerHeight;
-    const opacity = Math.max(0, 1 - scrollY / (vh * 0.8));
+    const opacity = Math.max(0, 1 - scrollY / (vh * 1.5));
     canvas.style.opacity = opacity;
   }, { passive: true });
 
