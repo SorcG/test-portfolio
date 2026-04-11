@@ -3723,6 +3723,9 @@ footer {
       // 1. Lock icon + content fade
       content.classList.add('unlocking');
 
+      // Scroll to top immediately
+      window.scrollTo(0, 0);
+
       // 2. Bolzen zurückziehen + Tür öffnen
       setTimeout(() => door.classList.add('opening'), 400);
 
