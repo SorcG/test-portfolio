@@ -420,6 +420,62 @@ body::before {
   box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.08), 0 4px 24px rgba(0, 212, 170, 0.1);
 }
 
+/* Show Password Checkbox */
+.vault-show-pw {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  margin: 0.5rem 0 1rem;
+  user-select: none;
+}
+
+.vault-show-pw input[type="checkbox"] {
+  display: none;
+}
+
+.vault-show-pw-box {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background 0.2s;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.vault-show-pw-box::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 1.5px;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.vault-show-pw input[type="checkbox"]:checked + .vault-show-pw-box {
+  border-color: var(--accent);
+  background: rgba(0, 212, 170, 0.08);
+}
+
+.vault-show-pw input[type="checkbox"]:checked + .vault-show-pw-box::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.vault-show-pw:hover .vault-show-pw-box {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
 /* Submit Button */
 .vault-submit {
   font-family: var(--font-mono);
@@ -2327,6 +2383,11 @@ footer {
     <p class="vault-subtitle">Geben Sie den Zugangscode ein</p>
     <div class="vault-input-group">
       <input type="password" id="vaultPassword" class="vault-input" placeholder="Zugangscode" autocomplete="off" />
+      <label class="vault-show-pw">
+        <input type="checkbox" id="vaultShowPw" />
+        <span class="vault-show-pw-box"></span>
+        Passwort anzeigen
+      </label>
       <button id="vaultSubmit" class="vault-submit">Entsperren</button>
     </div>
     <p class="vault-error" id="vaultError">Falscher Zugangscode</p>
@@ -3753,6 +3814,14 @@ footer {
         content.classList.remove('shake');
       }, 800);
     }
+  }
+
+  // ── Show/Hide Password Toggle ──
+  const showPwCheckbox = document.getElementById('vaultShowPw');
+  if (showPwCheckbox) {
+    showPwCheckbox.addEventListener('change', (e) => {
+      input.type = e.target.checked ? 'text' : 'password';
+    });
   }
 
   submit.addEventListener('click', tryUnlock);
