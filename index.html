@@ -805,30 +805,47 @@ section {
 .about-photo {
   width: 100%;
   aspect-ratio: 3 / 4;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
   overflow: hidden;
+  border-radius: 16px;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--accent), rgba(0, 212, 170, 0.15) 50%, var(--border) 100%);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 212, 170, 0.08);
+}
+
+.about-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 13px;
+  position: relative;
+  z-index: 1;
 }
 
 .about-photo::before {
   content: '';
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, var(--accent-dim), transparent 50%);
+  background: linear-gradient(135deg, var(--accent), transparent 60%);
   z-index: 0;
+  border-radius: 16px;
+  opacity: 0.5;
 }
 
-.about-photo span {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
+.about-photo::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 3px;
+  right: 3px;
+  height: 40%;
+  background: linear-gradient(to top, rgba(6, 8, 13, 0.5), transparent);
+  border-radius: 0 0 13px 13px;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .about-text {
@@ -1823,8 +1840,13 @@ footer {
   }
 
   .about-photo {
-    max-width: 250px;
+    max-width: 220px;
     margin: 0 auto;
+    border-radius: 14px;
+  }
+
+  .about-photo img {
+    border-radius: 11px;
   }
 
   .about-stats {
@@ -2025,7 +2047,7 @@ footer {
   </div>
   <div class="about-grid">
     <div class="about-photo reveal-left" style="transition-delay: 0.15s">
-      <img src="luca1.jpg" alt="Luca Sorci" style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;border-radius:inherit;" />
+      <img src="luca1.jpg" alt="Luca Sorci" />
     </div>
     <div class="about-text">
       <p class="reveal-right" style="transition-delay: 0.2s">
