@@ -161,13 +161,15 @@ body::before {
 }
 
 .loader-logo {
-  font-family: var(--font-mono);
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--accent);
   opacity: 0;
   transform: scale(0.8);
   animation: loaderReveal 0.6s 0.2s forwards;
+}
+
+.loader-logo img {
+  height: 60px;
+  width: auto;
+  display: block;
 }
 
 .loader-line {
@@ -226,12 +228,15 @@ nav.scrolled {
 }
 
 .nav-logo {
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--accent);
-  letter-spacing: 0.05em;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo img {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 
 .nav-links {
@@ -1975,7 +1980,7 @@ footer {
 
 <!-- ─── Page Loader ─── -->
 <div class="page-loader" id="pageLoader">
-  <div class="loader-logo">LS_</div>
+  <div class="loader-logo"><img src="logo.png" alt="Logo" /></div>
   <div class="loader-line"></div>
 </div>
 
@@ -1988,7 +1993,7 @@ footer {
 
 <!-- ─── Navigation ─── -->
 <nav id="navbar">
-  <a href="#hero" class="nav-logo">LS_</a>
+  <a href="#hero" class="nav-logo"><img src="logo.png" alt="Logo" /></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#ueber-mich">Über mich</a></li>
     <li><a href="#kompetenzen">Kompetenzen</a></li>
