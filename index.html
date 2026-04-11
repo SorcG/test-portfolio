@@ -3622,11 +3622,7 @@ footer {
   const error = document.getElementById('vaultError');
   const loader = document.getElementById('pageLoader');
 
-  // Session-Check: wenn schon entsperrt, Vault sofort entfernen
-  if (sessionStorage.getItem('vault_unlocked')) {
-    overlay.remove();
-    return;
-  }
+  // Vault immer anzeigen — kein Session-Check
 
   // ── Vault Ambient Particles ──
   const vc = document.getElementById('vault-particles');
@@ -3711,8 +3707,6 @@ footer {
   async function tryUnlock() {
     const hash = await hashPassword(input.value);
     if (hash === PASS_HASH) {
-      sessionStorage.setItem('vault_unlocked', 'true');
-
       // 1. Lock icon + content fade
       content.classList.add('unlocking');
 
