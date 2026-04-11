@@ -357,21 +357,33 @@ body::before {
 
 /* Title */
 .vault-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(1.8rem, 4vw, 2.5rem);
   font-weight: 700;
   color: #ffffff;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   margin-bottom: 0.75rem;
+  cursor: default;
+  transition: color 0.3s;
+}
+
+.vault-title:hover {
+  color: var(--accent);
 }
 
 /* Subtitle */
 .vault-subtitle {
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   letter-spacing: 0.05em;
   margin-bottom: 3rem;
+  cursor: default;
+  transition: color 0.3s;
+}
+
+.vault-subtitle:hover {
+  color: var(--accent);
 }
 
 /* Input Group */
@@ -399,7 +411,7 @@ body::before {
 }
 
 .vault-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.45);
   letter-spacing: 0.1em;
 }
 
@@ -426,7 +438,8 @@ body::before {
 
 .vault-submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(0, 212, 170, 0.3);
+  box-shadow: 0 6px 30px rgba(0, 212, 170, 0.5), 0 0 60px rgba(0, 212, 170, 0.15);
+  background: #00e6b0;
 }
 
 .vault-submit:active {
