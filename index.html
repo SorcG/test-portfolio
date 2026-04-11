@@ -3011,6 +3011,10 @@ footer {
       p.vy *= 0.995;
     }
 
+    // Connection flash pulse (every 2 seconds)
+    const flashCycle = (time % 1.6); // 1.6 = ~2s at time += 0.008
+    const flash = flashCycle < 0.15 ? Math.sin(flashCycle / 0.15 * Math.PI) : 0;
+
     // Draw connections
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
@@ -3019,14 +3023,14 @@ footer {
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < CONNECT_DIST) {
           const t = 1 - dist / CONNECT_DIST;
-          const alpha = t * 0.35;
+          const alpha = t * (0.35 + flash * 0.5);
           // Blend color based on particles' hue
           const mixH = (particles[i].hue + particles[j].hue) / 2;
           const cr = lerp(ACCENT.r, ACCENT2.r, mixH);
           const cg = lerp(ACCENT.g, ACCENT2.g, mixH);
           const cb = lerp(ACCENT.b, ACCENT2.b, mixH);
           ctx.strokeStyle = `rgba(${cr|0},${cg|0},${cb|0},${alpha})`;
-          ctx.lineWidth = t * 1.5;
+          ctx.lineWidth = t * (1.5 + flash * 1.5);
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
