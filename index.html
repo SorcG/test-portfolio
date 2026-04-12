@@ -3079,7 +3079,12 @@ footer {
     </div>
   </div>
 
-  <form class="contact-form reveal" style="transition-delay: 0.3s" id="contactForm">
+  <form class="contact-form reveal" style="transition-delay: 0.3s" id="contactForm"
+        action="https://formsubmit.co/lucsortech@gmail.com" method="POST">
+    <input type="hidden" name="_captcha" value="false" />
+    <input type="hidden" name="_template" value="table" />
+    <input type="hidden" name="_subject" value="Neue Kontaktanfrage — Portfolio" />
+    <input type="text" name="_honey" style="display:none" />
     <div class="form-group">
       <label for="contactName">Name</label>
       <input type="text" id="contactName" name="name" placeholder="Dein Name" required />
@@ -3090,13 +3095,13 @@ footer {
     </div>
     <div class="form-group full-width">
       <label for="contactSubject">Betreff</label>
-      <input type="text" id="contactSubject" name="subject" placeholder="Worum geht es?" />
+      <input type="text" id="contactSubject" name="_subject" placeholder="Worum geht es?" />
     </div>
     <div class="form-group full-width">
       <label for="contactMessage">Nachricht</label>
       <textarea id="contactMessage" name="message" placeholder="Deine Nachricht..." required></textarea>
     </div>
-    <button type="submit" class="contact-form-submit">Nachricht senden</button>
+    <button type="submit" class="contact-form-submit" id="contactSubmitBtn">Nachricht senden</button>
     <p class="contact-form-status" id="contactFormStatus"></p>
   </form>
 </section>
@@ -3993,27 +3998,47 @@ footer {
 })();
 
 /* ═══════════════════════════════════════════
-   Contact Form — mailto handler
+   Contact Form — FormSubmit.co (AJAX)
    ═══════════════════════════════════════════ */
 (function() {
   const form = document.getElementById('contactForm');
   if (!form) return;
   const status = document.getElementById('contactFormStatus');
+  const btn = document.getElementById('contactSubmitBtn');
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    const name = form.querySelector('#contactName').value.trim();
-    const email = form.querySelector('#contactEmail').value.trim();
-    const subject = form.querySelector('#contactSubject').value.trim() || 'Kontaktanfrage';
-    const message = form.querySelector('#contactMessage').value.trim();
+    btn.disabled = true;
+    btn.textContent = 'Wird gesendet…';
+    status.classList.remove('show');
 
-    const body = `Name: ${name}\nE-Mail: ${email}\n\n${message}`;
-    const mailto = `mailto:lucsortech@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
+    const data = new FormData(form);
 
-    status.textContent = 'E-Mail-Client wird geöffnet…';
-    status.classList.add('show');
-    setTimeout(() => status.classList.remove('show'), 4000);
+    fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(res) {
+      if (res.ok) {
+        status.textContent = 'Nachricht erfolgreich gesendet!';
+        status.style.color = 'var(--accent)';
+        status.classList.add('show');
+        form.reset();
+      } else {
+        throw new Error('Fehler');
+      }
+    })
+    .catch(function() {
+      status.textContent = 'Fehler beim Senden. Bitte versuche es erneut.';
+      status.style.color = '#ff4444';
+      status.classList.add('show');
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = 'Nachricht senden';
+      setTimeout(() => status.classList.remove('show'), 5000);
+    });
   });
 })();
 
