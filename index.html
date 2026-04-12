@@ -3017,8 +3017,8 @@ footer {
     ctx.fillStyle = centerGlow;
     ctx.fillRect(0, 0, w, h);
 
-    // Mouse glow
-    if (mouse.x > 0 && mouse.y > 0) {
+    // Mouse glow (desktop only)
+    if (!isMobile && mouse.x > 0 && mouse.y > 0) {
       const mg = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_RADIUS);
       mg.addColorStop(0, `rgba(${ACCENT.r},${ACCENT.g},${ACCENT.b},0.12)`);
       mg.addColorStop(0.4, `rgba(${ACCENT.r},${ACCENT.g},${ACCENT.b},0.04)`);
@@ -3027,7 +3027,7 @@ footer {
       ctx.fillRect(0, 0, w, h);
     }
 
-    // Mouse velocity for trail effect
+    // Mouse velocity for trail effect (desktop only)
     const mVelX = mouse.x - mouse.prevX;
     const mVelY = mouse.y - mouse.prevY;
     const mSpeed = Math.sqrt(mVelX * mVelX + mVelY * mVelY);
@@ -3049,11 +3049,11 @@ footer {
       if (p.y < -20) p.y = h + 20;
       if (p.y > h + 20) p.y = -20;
 
-      // Mouse attraction (pull towards cursor)
+      // Mouse attraction (pull towards cursor — desktop only)
       const dx = mouse.x - p.x;
       const dy = mouse.y - p.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < MOUSE_RADIUS && dist > 0) {
+      if (!isMobile && dist < MOUSE_RADIUS && dist > 0) {
         const force = (1 - dist / MOUSE_RADIUS) * 0.015;
         p.vx += dx * force;
         p.vy += dy * force;
@@ -3144,21 +3144,13 @@ footer {
     requestAnimationFrame(draw);
   }
 
-  // Mouse tracking
-  window.addEventListener('mousemove', (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
-  // Touch support for mobile
-  window.addEventListener('touchmove', (e) => {
-    mouse.x = e.touches[0].clientX;
-    mouse.y = e.touches[0].clientY;
-  }, { passive: true });
-  window.addEventListener('touchend', () => {
-    mouse.x = -1000;
-    mouse.y = -1000;
-  });
+  // Mouse tracking (desktop only)
+  if (!isMobile) {
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+  }
 
   // Fade out on scroll
   window.addEventListener('scroll', () => {
