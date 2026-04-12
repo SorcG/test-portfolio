@@ -2252,6 +2252,12 @@ section {
   background: #00e6b0;
 }
 
+.contact-form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .contact-form-status {
   grid-column: 1 / -1;
   font-family: var(--font-mono);
@@ -2263,6 +2269,161 @@ section {
 
 .contact-form-status.show {
   opacity: 1;
+}
+
+/* ─── Send Animation Overlay ─── */
+.form-send-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(5, 7, 11, 0.92);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.form-send-overlay.active {
+  display: flex;
+}
+
+.contact-form {
+  position: relative;
+}
+
+.send-envelope {
+  position: relative;
+  width: 90px;
+  height: 65px;
+  opacity: 0;
+  transform: scale(0.3) translateY(40px);
+}
+
+.send-envelope.appear {
+  animation: envelopeAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.send-envelope.close-flap .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+.send-envelope.close-flap .envelope-letter {
+  animation: letterSlideIn 0.3s ease-out forwards;
+}
+
+.send-envelope.fly-away {
+  animation: envelopeFly 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.envelope-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0e1219, #151b25);
+  border: 1.5px solid var(--accent);
+  border-radius: 4px 4px 6px 6px;
+  overflow: visible;
+  box-shadow: 0 0 30px rgba(0, 212, 170, 0.15), inset 0 0 20px rgba(0, 212, 170, 0.05);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: -1px;
+  left: -1.5px;
+  right: -1.5px;
+  height: 38px;
+  background: linear-gradient(180deg, #0a0d14, #0e1219);
+  border: 1.5px solid var(--accent);
+  border-bottom: none;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform-origin: top center;
+  transition: transform 0.4s ease-in-out;
+  z-index: 2;
+}
+
+.envelope-letter {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 10px;
+  top: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1;
+}
+
+.letter-line {
+  height: 2px;
+  background: rgba(0, 212, 170, 0.3);
+  border-radius: 1px;
+}
+
+.letter-line.short {
+  width: 60%;
+}
+
+.envelope-sparkles {
+  position: absolute;
+  inset: -30px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.send-success-text {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.send-success-text.show {
+  animation: successTextIn 0.5s ease-out forwards;
+}
+
+@keyframes envelopeAppear {
+  0% { opacity: 0; transform: scale(0.3) translateY(40px); }
+  60% { opacity: 1; transform: scale(1.1) translateY(-5px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes letterSlideIn {
+  0% { top: -20px; }
+  100% { top: 8px; }
+}
+
+@keyframes envelopeFly {
+  0% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+  30% { opacity: 1; transform: scale(0.95) translateY(10px) rotate(-2deg); }
+  100% { opacity: 0; transform: scale(0.4) translateY(-250px) rotate(8deg); }
+}
+
+@keyframes sparkleOut {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0); }
+}
+
+@keyframes successTextIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .response-time {
@@ -3103,6 +3264,22 @@ footer {
     </div>
     <button type="submit" class="contact-form-submit" id="contactSubmitBtn">Nachricht senden</button>
     <p class="contact-form-status" id="contactFormStatus"></p>
+
+    <!-- Send Animation Overlay -->
+    <div class="form-send-overlay" id="formSendOverlay">
+      <div class="send-envelope" id="sendEnvelope">
+        <div class="envelope-body">
+          <div class="envelope-flap"></div>
+          <div class="envelope-letter">
+            <div class="letter-line"></div>
+            <div class="letter-line short"></div>
+            <div class="letter-line"></div>
+          </div>
+        </div>
+        <div class="envelope-sparkles" id="envelopeSparkles"></div>
+      </div>
+      <p class="send-success-text" id="sendSuccessText">Nachricht gesendet!</p>
+    </div>
   </form>
 </section>
 
@@ -3998,13 +4175,73 @@ footer {
 })();
 
 /* ═══════════════════════════════════════════
-   Contact Form — FormSubmit.co (AJAX)
+   Contact Form — FormSubmit.co (AJAX) + Animation
    ═══════════════════════════════════════════ */
 (function() {
   const form = document.getElementById('contactForm');
   if (!form) return;
   const status = document.getElementById('contactFormStatus');
   const btn = document.getElementById('contactSubmitBtn');
+  const overlay = document.getElementById('formSendOverlay');
+  const envelope = document.getElementById('sendEnvelope');
+  const sparklesEl = document.getElementById('envelopeSparkles');
+  const successText = document.getElementById('sendSuccessText');
+
+  function createSparkles() {
+    sparklesEl.innerHTML = '';
+    for (let i = 0; i < 12; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const angle = (i / 12) * Math.PI * 2;
+      const dist = 30 + Math.random() * 40;
+      s.style.left = '50%';
+      s.style.top = '50%';
+      s.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+      s.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+      s.style.animation = `sparkleOut 0.6s ${0.05 * i}s ease-out forwards`;
+      sparklesEl.appendChild(s);
+    }
+  }
+
+  function playSuccessAnimation() {
+    // Reset
+    envelope.className = 'send-envelope';
+    successText.className = 'send-success-text';
+    overlay.classList.add('active');
+
+    // Step 1: Envelope appears (pops in)
+    requestAnimationFrame(() => {
+      envelope.classList.add('appear');
+    });
+
+    // Step 2: Letter slides in + flap closes (after appear)
+    setTimeout(() => {
+      envelope.classList.add('close-flap');
+    }, 550);
+
+    // Step 3: Sparkles burst + envelope flies away
+    setTimeout(() => {
+      createSparkles();
+      envelope.classList.add('fly-away');
+    }, 1050);
+
+    // Step 4: Success text fades in
+    setTimeout(() => {
+      successText.classList.add('show');
+    }, 1500);
+
+    // Step 5: Overlay fades out
+    setTimeout(() => {
+      overlay.classList.remove('active');
+    }, 3200);
+  }
+
+  function playErrorFeedback() {
+    status.textContent = 'Fehler beim Senden. Bitte versuche es erneut.';
+    status.style.color = '#ff4444';
+    status.classList.add('show');
+    setTimeout(() => status.classList.remove('show'), 5000);
+  }
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -4021,23 +4258,18 @@ footer {
     })
     .then(function(res) {
       if (res.ok) {
-        status.textContent = 'Nachricht erfolgreich gesendet!';
-        status.style.color = 'var(--accent)';
-        status.classList.add('show');
         form.reset();
+        playSuccessAnimation();
       } else {
         throw new Error('Fehler');
       }
     })
     .catch(function() {
-      status.textContent = 'Fehler beim Senden. Bitte versuche es erneut.';
-      status.style.color = '#ff4444';
-      status.classList.add('show');
+      playErrorFeedback();
     })
     .finally(function() {
       btn.disabled = false;
       btn.textContent = 'Nachricht senden';
-      setTimeout(() => status.classList.remove('show'), 5000);
     });
   });
 })();
