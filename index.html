@@ -2119,23 +2119,23 @@ section {
 }
 
 .contact-email {
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 3.5vw, 2rem);
-  font-weight: 700;
-  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
   text-decoration: none;
   position: relative;
   display: inline-block;
   transition: color 0.3s;
+  letter-spacing: 0.03em;
 }
 
 .contact-email::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -2px;
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: right;
@@ -2147,20 +2147,123 @@ section {
 
 .contact-links {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   margin-top: 1.5rem;
 }
 
 .contact-links a {
-  color: var(--text-muted);
+  color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   text-decoration: none;
   letter-spacing: 0.05em;
-  transition: color 0.3s;
+  padding: 0.75rem 2rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: all 0.3s;
+  background: rgba(255, 255, 255, 0.02);
 }
 
-.contact-links a:hover { color: var(--accent); }
+.contact-links a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(0, 212, 170, 0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 212, 170, 0.15);
+}
+
+/* ─── Contact Form ─── */
+.contact-form {
+  width: 100%;
+  max-width: 900px;
+  margin: 3rem auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.contact-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form .form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.contact-form label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  outline: none;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--accent);
+  background: rgba(0, 212, 170, 0.03);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.06);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.contact-form textarea {
+  min-height: 140px;
+}
+
+.contact-form-submit {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #05070b;
+  background: var(--accent);
+  border: none;
+  padding: 0.85rem 3rem;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  justify-self: start;
+}
+
+.contact-form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(0, 212, 170, 0.4);
+  background: #00e6b0;
+}
+
+.contact-form-status {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.contact-form-status.show {
+  opacity: 1;
+}
 
 .response-time {
   font-family: var(--font-mono);
@@ -2254,6 +2357,14 @@ footer {
 
   .contact-links {
     justify-content: center;
+  }
+
+  .contact-form {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form-submit {
+    justify-self: center;
   }
 
   .project-showcase {
@@ -2959,7 +3070,7 @@ footer {
         Aktuell verfügbar für Projekte
       </div>
       <p class="contact-cta">Du hast eine Idee, ein Projekt oder eine Herausforderung? Ich freue mich auf deine Nachricht.</p>
-      <a href="mailto:luca@sorci.com" class="contact-email">luca@sorci.com</a>
+      <a href="mailto:lucsortech@gmail.com" class="contact-email">lucsortech@gmail.com</a>
       <div class="contact-links">
         <a href="https://github.com/SorcG" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/luca-sorci-676b05311/" target="_blank">LinkedIn</a>
@@ -2967,6 +3078,27 @@ footer {
       <p class="response-time">Antwort in der Regel innerhalb von 24h</p>
     </div>
   </div>
+
+  <form class="contact-form reveal" style="transition-delay: 0.3s" id="contactForm">
+    <div class="form-group">
+      <label for="contactName">Name</label>
+      <input type="text" id="contactName" name="name" placeholder="Dein Name" required />
+    </div>
+    <div class="form-group">
+      <label for="contactEmail">E-Mail</label>
+      <input type="email" id="contactEmail" name="email" placeholder="deine@email.de" required />
+    </div>
+    <div class="form-group full-width">
+      <label for="contactSubject">Betreff</label>
+      <input type="text" id="contactSubject" name="subject" placeholder="Worum geht es?" />
+    </div>
+    <div class="form-group full-width">
+      <label for="contactMessage">Nachricht</label>
+      <textarea id="contactMessage" name="message" placeholder="Deine Nachricht..." required></textarea>
+    </div>
+    <button type="submit" class="contact-form-submit">Nachricht senden</button>
+    <p class="contact-form-status" id="contactFormStatus"></p>
+  </form>
 </section>
 
 <!-- ─── Footer ─── -->
@@ -3857,6 +3989,31 @@ footer {
   loader.classList.add('active');
   window.addEventListener('load', () => {
     setTimeout(() => loader.classList.add('hidden'), 3200);
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   Contact Form — mailto handler
+   ═══════════════════════════════════════════ */
+(function() {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  const status = document.getElementById('contactFormStatus');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = form.querySelector('#contactName').value.trim();
+    const email = form.querySelector('#contactEmail').value.trim();
+    const subject = form.querySelector('#contactSubject').value.trim() || 'Kontaktanfrage';
+    const message = form.querySelector('#contactMessage').value.trim();
+
+    const body = `Name: ${name}\nE-Mail: ${email}\n\n${message}`;
+    const mailto = `mailto:lucsortech@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
+
+    status.textContent = 'E-Mail-Client wird geöffnet…';
+    status.classList.add('show');
+    setTimeout(() => status.classList.remove('show'), 4000);
   });
 })();
 
