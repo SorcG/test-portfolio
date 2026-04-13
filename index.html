@@ -2089,8 +2089,8 @@ section {
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
-  opacity: 0;
-  transform: translateY(15px) scale(0.8);
+  opacity: 0.15;
+  transform: translateY(8px) scale(0.85);
   transition: opacity 0.4s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -2196,7 +2196,7 @@ section {
   width: 0%;
   height: 100%;
   background: var(--accent);
-  transition: width 0.3s ease-out;
+  transition: width 0.35s ease-out;
 }
 
 .wf-connector.active .wf-connector-line::after {
@@ -2210,7 +2210,7 @@ section {
   height: 5px;
   border-radius: 50%;
   background: rgba(0, 212, 170, 0.1);
-  transition: background 0.3s, box-shadow 0.3s;
+  transition: background 0.35s, box-shadow 0.35s;
 }
 
 .wf-connector.active .wf-connector-dot {
@@ -4213,30 +4213,47 @@ footer {
   const steps = mock.querySelectorAll('.wf-step');
   const connectors = mock.querySelectorAll('.wf-connector');
   const stream = document.getElementById('workflowStream');
-  let animated = false;
+  let started = false;
+  let loopTimer = null;
 
-  function animateWorkflow() {
-    if (animated) return;
-    animated = true;
+  function resetAll() {
+    steps.forEach(s => s.classList.remove('active'));
+    connectors.forEach(c => c.classList.remove('active'));
+    stream.classList.remove('animate');
+    // Force reflow so animation restarts
+    void stream.offsetWidth;
+  }
 
-    // Start background stream
-    stream.classList.add('animate');
+  function runCycle() {
+    resetAll();
 
-    let delay = 300;
-    steps.forEach((step, i) => {
-      // Activate connector before step (except first)
-      if (i > 0) {
-        const conn = connectors[i - 1];
-        setTimeout(() => conn.classList.add('active'), delay - 150);
-      }
-      setTimeout(() => step.classList.add('active'), delay);
-      delay += 450;
-    });
+    // Small pause before starting
+    setTimeout(() => {
+      stream.classList.add('animate');
+
+      let delay = 300;
+      steps.forEach((step, i) => {
+        if (i > 0) {
+          const conn = connectors[i - 1];
+          setTimeout(() => conn.classList.add('active'), delay - 150);
+        }
+        setTimeout(() => step.classList.add('active'), delay);
+        delay += 450;
+      });
+
+      // Total animation: ~300 + 4*450 = 2100ms, hold for 2s, then restart
+      loopTimer = setTimeout(runCycle, 5000);
+    }, 400);
   }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) animateWorkflow();
+      if (entry.isIntersecting) {
+        if (!started) {
+          started = true;
+          runCycle();
+        }
+      }
     });
   }, { threshold: 0.3 });
 
